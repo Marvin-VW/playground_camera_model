@@ -50,21 +50,21 @@ class Cube:
             self.cube_points[pos] = translated_vec
 
     def cube_drawer(self, C_T_V, V_T_Cube):
-        cube_points_transform = []
+        self.cube_points_transform = []
 
         for point in self.cube_points:
-            cubeP = C_T_V @ V_T_Cube @ point
-            cube_points_transform.append(cubeP)
+            cubeP = np.matmul(C_T_V , np.matmul(V_T_Cube, point))
+            self.cube_points_transform.append(cubeP)
 
-        return cube_points_transform
+        return self.cube_points_transform
     
     #faces to render
     def set_render_faces(self, top, bottom, front, back, left, right):
         self.render_faces = [top, bottom, front, back, left, right]
 
     #center points of faces
-    def set_face_points(self, Cen_cubeP0, Cen_cubeP1, Cen_cubeP2, Cen_cubeP3, Cen_cubeP4, Cen_cubeP5, Cen_cubeP6, Cen_cubeP7):
-        self.face_points = [Cen_cubeP0, Cen_cubeP1, Cen_cubeP2, Cen_cubeP3, Cen_cubeP4, Cen_cubeP5, Cen_cubeP6, Cen_cubeP7]
+    def set_face_points(self, face_points):
+        self.face_points = face_points
 
     def get_face_points(self):
         return self.face_points

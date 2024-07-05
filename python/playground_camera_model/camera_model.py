@@ -13,6 +13,8 @@ class CameraModel:
         self.u0: int = u0
         self.v0: int = v0
 
+        self.fov_x_deg, self.fov_y_deg = self.calculate_fov(sensor_width, sensor_height, focal_length)
+
         self.camera_image = np.zeros((resolution_y, resolution_x, 3), dtype=np.uint8)
         self.reset_camera_image()
 
@@ -33,6 +35,17 @@ class CameraModel:
         ])
 
         self.I_T_C = np.matmul(matrix_k, matrix_c)
+
+    def calculate_fov(self, sensor_width, sensor_height, focal_length):
+        # Calculate horizontal FOV (in radians)
+        fov_x = 2 * np.arctan(sensor_width / (2 * focal_length))
+        # Calculate vertical FOV (in radians)
+        fov_y = 2 * np.arctan(sensor_height / (2 * focal_length))
+        # Convert FOVs from radians to degrees
+        fov_x_deg = np.rad2deg(fov_x)
+        fov_y_deg = np.rad2deg(fov_y)
+        return fov_x_deg, fov_y_deg
+
 
     def draw_camera_image_point(self, C_point: np.array) -> None:
         I_point = np.matmul(self.I_T_C, C_point)
