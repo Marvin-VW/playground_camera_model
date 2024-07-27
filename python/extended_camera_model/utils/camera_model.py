@@ -1,7 +1,8 @@
-# Copyright (C) 2024 twyleg
 import numpy as np
 import cv2 as cv
 from typing import List
+
+from utils.cube import Cube
 
 
 class CameraModel:
@@ -33,20 +34,39 @@ class CameraModel:
             [0,             0,              1,  0],
         ])
 
-        self.I_T_C = matrix_k @ matrix_c
+        self.I_T_C = np.matmul(matrix_k, matrix_c)
+
+    
+    def camera_transform(self, object, C_T_V, V_T_Cube) -> List:
+        transformed_triangles = []
+
+        if isinstance(object, Cube):
+            for triangle_tuple in object.triangles:
+                transformed_triangle = tuple(C_T_V @ V_T_Cube @ vertex for vertex in triangle_tuple)
+                transformed_triangles.append(transformed_triangle)
+        else:
+            for triangle_tuple in object:
+                transformed_triangle = tuple(C_T_V @ V_T_Cube @ vertex for vertex in triangle_tuple)
+                transformed_triangles.append(transformed_triangle)
+
+        return transformed_triangles
 
     def draw_camera_image_point(self, C_point: np.array) -> None:
-
         I_point = np.matmul(self.I_T_C, C_point)
         u = int(I_point[0] / I_point[2])
         v = int(I_point[1] / I_point[2])
+        cv.circle(self.camera_image, (u, v), 5, (255, 0, 0), 2)
 
-        cv.circle(self.camera_image, (u, v), 5, (255,0,0), 2)
+    def draw_all_cube_points(self, cube_points) -> None:
+
+        for tuple in cube_points:
+            for point in tuple:
+                self.draw_camera_image_point(point)
+
 
     def draw_camera_image_line(self, C_point0: np.array, C_point1: np.array) -> None:
-
-        I_point0 = self.I_T_C @ C_point0
-        I_point1 = self.I_T_C @ C_point1
+        I_point0 = np.matmul(self.I_T_C, C_point0)
+        I_point1 = np.matmul(self.I_T_C, C_point1)
 
         u0 = int(I_point0[0] / I_point0[2])
         v0 = int(I_point0[1] / I_point0[2])
@@ -54,22 +74,31 @@ class CameraModel:
         u1 = int(I_point1[0] / I_point1[2])
         v1 = int(I_point1[1] / I_point1[2])
 
-        cv.line(self.camera_image, (u0, v0), (u1, v1), (255,0,0), 1)
+        cv.line(self.camera_image, (u0, v0), (u1, v1), (0, 0, 0), 1)
 
-    def fill_poly(self, C_points: List[np.array]) -> None:
-        I_points = []
+    def draw_cube_lines(self, triangles) -> None:
 
-        for C_point in C_points:
-            I_point = self.I_T_C @ C_point
+        for triangle in triangles:
+            for i in range(3):
+                C_point0 = triangle[i]
+                C_point1 = triangle[(i + 1) % 3]
+                self.draw_camera_image_line(C_point0, C_point1)
+
+
+    def fill_cube_faces(self, triangles, color) -> None:
+        for triangle in triangles:
+            I_points = []
+
+            for C_point in triangle:
+                I_point = np.matmul(self.I_T_C, C_point)
+                
+                u = int(I_point[0] / I_point[2])
+                v = int(I_point[1] / I_point[2])
+
+                I_points.append((u, v))
             
-            u0 = int(I_point[0] / I_point[2])
-            v0 = int(I_point[1] / I_point[2])
-
-            I_points.append((u0, v0))
-
-        poly_points = np.array(I_points)
-
-        cv.fillPoly(self.camera_image, [poly_points], (255,0,0))
+            Poly_Points = np.array(I_points, np.int32)
+            cv.fillPoly(self.camera_image, [Poly_Points], color)
 
     def reset_camera_image(self) -> None:
         self.camera_image.fill(255)

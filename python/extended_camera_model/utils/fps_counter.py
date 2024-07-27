@@ -15,7 +15,10 @@ class FpsCounter:
         timestamp = time.time()
         delta_time = timestamp - self.last_timestamp
         self.last_timestamp = timestamp
-        self.fps = 1.0 / delta_time
+        try:
+            self.fps = 1.0 / delta_time
+        except:
+            self.fps = 0
         self.fps_history.append(self.fps)
         if len(self.fps_history) > self.filter_window_size:
             self.fps_history.pop(0)
@@ -28,4 +31,3 @@ class FpsCounter:
             return sum(self.fps_history) / len(self.fps_history)
         else:
             return 0
-
