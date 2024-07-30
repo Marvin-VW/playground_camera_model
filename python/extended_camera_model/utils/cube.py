@@ -34,22 +34,22 @@ class Cube:
         ]
         
         self.triangles = [
-            # Front face
-            (self.Cube_cubeP0, self.Cube_cubeP1, self.Cube_cubeP2),
-            (self.Cube_cubeP0, self.Cube_cubeP2, self.Cube_cubeP3),
-            #Back face
+            # Top face
             (self.Cube_cubeP4, self.Cube_cubeP5, self.Cube_cubeP6),
             (self.Cube_cubeP4, self.Cube_cubeP6, self.Cube_cubeP7),
-            # Top face
+            # Bottom face
+            (self.Cube_cubeP0, self.Cube_cubeP1, self.Cube_cubeP2),
+            (self.Cube_cubeP0, self.Cube_cubeP2, self.Cube_cubeP3),
+            # Left face
             (self.Cube_cubeP0, self.Cube_cubeP3, self.Cube_cubeP7),
             (self.Cube_cubeP0, self.Cube_cubeP7, self.Cube_cubeP4),
-            # Bottom face
+            # Right face
             (self.Cube_cubeP1, self.Cube_cubeP5, self.Cube_cubeP6),
             (self.Cube_cubeP1, self.Cube_cubeP6, self.Cube_cubeP2),
-            # Left face
+            # Front face
             (self.Cube_cubeP0, self.Cube_cubeP4, self.Cube_cubeP5),
             (self.Cube_cubeP0, self.Cube_cubeP5, self.Cube_cubeP1),
-            # Right face
+            # Back face
             (self.Cube_cubeP3, self.Cube_cubeP2, self.Cube_cubeP6),
             (self.Cube_cubeP3, self.Cube_cubeP6, self.Cube_cubeP7),
         ]
@@ -70,8 +70,6 @@ class Cube:
             self.triangles[i] = tuple(translation_matrix @ vertex for vertex in triangle)
 
     def set_face_points(self, *face_points):
-        if len(face_points) != 8:
-            raise ValueError("There must be 8 center points for the cube's faces.")
         self.face_points = list(face_points)
 
     def get_face_points(self):

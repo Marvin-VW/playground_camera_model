@@ -55,10 +55,18 @@ class Engine:
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
 
             self.camera_model.reset_camera_image()
+            face_points_front = []
 
-            for object in self.render_list:
+            for cube in self.render_list: 
+                
+                #fit cube points to view
+                transformed_triangles = self.camera_model.camera_transform(cube, self.C_T_V, self.V_T_Cube)
+                face_points_front.append(RenderFaces.generate_center_points(cube, transformed_triangles)) 
+
+            sorted_cube_list = RenderFaces.set_render_order(self.render_list, face_points_front)
+            for object in sorted_cube_list:
+
                 transformed_triangles = self.camera_model.camera_transform(object, self.C_T_V, self.V_T_Cube)
-
                 ndc_points = self.clipping_space.cube_in_space(transformed_triangles)
 
                 self.camera_model.draw_all_cube_points(ndc_points)
@@ -67,8 +75,6 @@ class Engine:
 
             self.fps_setter()
             self.window.window_show(self.camera_model)
-
-
 
 engine = Engine()
 engine.main()
