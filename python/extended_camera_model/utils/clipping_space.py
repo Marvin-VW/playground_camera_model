@@ -9,7 +9,7 @@ class Clipping_Space:
         near = 1
         far = 100.0
         self.projection_matrix = self.create_perspective_projection_matrix(fov, aspect_ratio, near, far)
-        self.border = 0.8
+        self.border = 1
 
     def create_perspective_projection_matrix(self, fov, aspect_ratio, near, far):
         

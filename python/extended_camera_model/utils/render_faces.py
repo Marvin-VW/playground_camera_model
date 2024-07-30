@@ -25,7 +25,6 @@ class RenderFaces:
     @staticmethod
     def set_render_order(cube_list, face_points_front):
 
-        print(face_points_front)
         # Combine cube_list and face_points_front into tuples
         cubes_with_front_points = list(zip(cube_list, face_points_front))
         

@@ -85,8 +85,8 @@ class CameraModel:
                 self.draw_camera_image_line(C_point0, C_point1)
 
 
-    def fill_cube_faces(self, triangles, color) -> None:
-        for triangle in triangles:
+    def fill_cube_faces(self, triangles, cube) -> None:
+        for pos, triangle in enumerate(triangles):
             I_points = []
 
             for C_point in triangle:
@@ -98,6 +98,7 @@ class CameraModel:
                 I_points.append((u, v))
             
             Poly_Points = np.array(I_points, np.int32)
+            color = cube.get_color_face(pos)
             cv.fillPoly(self.camera_image, [Poly_Points], color)
 
     def reset_camera_image(self) -> None:

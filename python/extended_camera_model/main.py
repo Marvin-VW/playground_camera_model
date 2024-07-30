@@ -48,6 +48,11 @@ class Engine:
         cub1 = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
         self.render_list.append(cub1)
 
+        for cube in self.render_list:
+            cube.set_dafault_color(Color.ROYAL_BLUE)
+            #top, bottom, left, right, front, back
+            #cube.set_color_faces(Color.ROYAL_BLUE, Color.ROYAL_BLUE, Color.LIGHT_BLUE, Color.LIGHT_BLUE, Color.ORANGE_RED, Color.ORANGE_RED)
+
         while True:
 
             self.fps_counter.update()
@@ -71,7 +76,7 @@ class Engine:
 
                 self.camera_model.draw_all_cube_points(ndc_points)
                 self.camera_model.draw_cube_lines(ndc_points)
-                self.camera_model.fill_cube_faces(ndc_points, Color.ROYAL_BLUE)
+                #self.camera_model.fill_cube_faces(ndc_points, object)
 
             self.fps_setter()
             self.window.window_show(self.camera_model)

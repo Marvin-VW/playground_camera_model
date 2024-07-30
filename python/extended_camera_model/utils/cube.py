@@ -16,6 +16,9 @@ class Cube:
         self.set_position(pos_x, pos_y, pos_z)
         self.render_faces = [0] * 12
 
+        self.default_color = None
+        self.face_colors = [None] * 12
+
     def generate_vertices(self, size):
         self.Cube_cubeP0 = self.create_point(-size, size, -size)
         self.Cube_cubeP1 = self.create_point(-size, -size, -size)
@@ -74,4 +77,13 @@ class Cube:
 
     def get_face_points(self):
         return self.face_points
+    
+    def set_dafault_color(self, color):
+        self.default_color = color
+        self.face_colors = [self.default_color] * 12
+    
+    def set_color_faces(self, top, bottom, left, right, front, back):
+        self.face_colors = [top, top, bottom, bottom, left, left, right, right, front, front, back, back]
 
+    def get_color_face(self, number):
+        return self.face_colors[number]
