@@ -61,8 +61,8 @@ class Matrix_Functions:
     def homogeneous_transformation(cls, window):
         V_T_C = cls.create_homogeneous_transformation_matrix(
             (window.get_camera_system_translation_x() - 10000) / 1000.0,
-            (window.get_camera_system_translation_z() - 10000) / 1000.0,
             (window.get_camera_system_translation_y() - 10000) / 1000.0,
+            (window.get_camera_system_translation_z() - 10000) / 1000.0,
             cls.DEG_TO_RAD(window.get_camera_system_rotation_roll() / 10.0),
             cls.DEG_TO_RAD(window.get_camera_system_rotation_pitch() / 10.0),
             cls.DEG_TO_RAD(window.get_camera_system_rotation_yaw() / 10.0),
@@ -74,8 +74,8 @@ class Matrix_Functions:
 
         V_T_Cube = cls.create_homogeneous_transformation_matrix(
             (window.get_cube_system_translation_x() - 10000) / 1000.0,
-            (window.get_cube_system_translation_z() - 10000) / 1000.0,
             (window.get_cube_system_translation_y() - 10000) / 1000.0,
+            (window.get_cube_system_translation_z() - 10000) / 1000.0,
             cls.DEG_TO_RAD(window.get_cube_system_rotation_roll() / 10.0),
             cls.DEG_TO_RAD(window.get_cube_system_rotation_pitch() / 10.0),
             cls.DEG_TO_RAD(window.get_cube_system_rotation_yaw() / 10.0),
