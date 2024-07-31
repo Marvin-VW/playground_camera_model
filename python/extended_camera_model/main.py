@@ -12,7 +12,7 @@ from utils.color import Color
 from utils.render_faces import RenderFaces
 from utils.clipping_space import Clipping_Space
 from utils.fps_counter import FpsCounter
-from utils.triangle2normal import CalculateNormal
+from utils.vectors import CalculateNormal
 
 class Engine:
 
@@ -30,6 +30,8 @@ class Engine:
         self.V_T_Cube = None
 
         self.fps_counter = FpsCounter(60)
+
+        self.show_normals = False
 
 
     def fps_setter(self):
@@ -59,6 +61,8 @@ class Engine:
             self.fps_counter.update()
 
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
+            camera_vector = CalculateNormal.get_camera_vector(self.window)
+
 
             self.camera_model.reset_camera_image()
             face_points_front = []
@@ -75,13 +79,24 @@ class Engine:
                 transformed_triangles = self.camera_model.camera_transform(object, self.C_T_V, self.V_T_Cube)
                 ndc_points = self.clipping_space.cube_in_space(transformed_triangles)
 
-                for triangle in transformed_triangles:
+                #z coords of normals
+                dot_product_result = []
 
-                    normal_start, normal_end = CalculateNormal.normal(triangle)
-                    self.camera_model.draw_camera_image_arrow(normal_start, normal_end)
+                for triangle in ndc_points:
 
-                self.camera_model.draw_all_cube_points(ndc_points)
-                self.camera_model.draw_cube_lines(ndc_points)
+                    scaled_normal, normal_start, normal_end = CalculateNormal.normal(triangle)
+                    dot_product_result.append(np.dot(scaled_normal, camera_vector))
+                    if self.show_normals:
+                        self.camera_model.draw_camera_image_arrow(normal_start, normal_end)
+
+                final_render_list = []
+
+                for pos, res in enumerate(dot_product_result):
+                    if res < 0:
+                        final_render_list.append(ndc_points[pos])
+
+                self.camera_model.draw_all_cube_points(final_render_list)
+                self.camera_model.draw_cube_lines(final_render_list)
                 #self.camera_model.fill_cube_faces(ndc_points, object)
 
             self.fps_setter()
