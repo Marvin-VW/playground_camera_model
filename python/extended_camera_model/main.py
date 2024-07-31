@@ -58,6 +58,9 @@ class Engine:
 
         while True:
 
+
+            self.window.handle_movement()
+
             self.fps_counter.update()
 
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
