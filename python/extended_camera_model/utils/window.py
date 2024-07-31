@@ -158,4 +158,3 @@ class Window:
                 cv.setTrackbarPos("Yaw", self.camera_window_name, self.camera_system_rotation_yaw)
                 cv.setTrackbarPos("Roll", self.camera_window_name, self.camera_system_rotation_roll)
                 self.last_mouse_position = (x, y)
-                
