@@ -41,20 +41,20 @@ class Cube:
             (self.Cube_cubeP4, self.Cube_cubeP5, self.Cube_cubeP6),
             (self.Cube_cubeP4, self.Cube_cubeP6, self.Cube_cubeP7),
             # Bottom face
-            (self.Cube_cubeP0, self.Cube_cubeP1, self.Cube_cubeP2),
-            (self.Cube_cubeP0, self.Cube_cubeP2, self.Cube_cubeP3),
+            (self.Cube_cubeP1, self.Cube_cubeP0, self.Cube_cubeP2),
+            (self.Cube_cubeP2, self.Cube_cubeP0, self.Cube_cubeP3),
             # Left face
-            (self.Cube_cubeP0, self.Cube_cubeP3, self.Cube_cubeP7),
-            (self.Cube_cubeP0, self.Cube_cubeP7, self.Cube_cubeP4),
+            (self.Cube_cubeP3, self.Cube_cubeP0, self.Cube_cubeP7),
+            (self.Cube_cubeP7, self.Cube_cubeP0, self.Cube_cubeP4),
             # Right face
-            (self.Cube_cubeP1, self.Cube_cubeP5, self.Cube_cubeP6),
-            (self.Cube_cubeP1, self.Cube_cubeP6, self.Cube_cubeP2),
+            (self.Cube_cubeP5, self.Cube_cubeP1, self.Cube_cubeP6),
+            (self.Cube_cubeP6, self.Cube_cubeP1, self.Cube_cubeP2),
             # Front face
-            (self.Cube_cubeP0, self.Cube_cubeP4, self.Cube_cubeP5),
-            (self.Cube_cubeP0, self.Cube_cubeP5, self.Cube_cubeP1),
+            (self.Cube_cubeP4, self.Cube_cubeP0, self.Cube_cubeP5),
+            (self.Cube_cubeP5, self.Cube_cubeP0, self.Cube_cubeP1),
             # Back face
-            (self.Cube_cubeP3, self.Cube_cubeP2, self.Cube_cubeP6),
-            (self.Cube_cubeP3, self.Cube_cubeP6, self.Cube_cubeP7),
+            (self.Cube_cubeP2, self.Cube_cubeP3, self.Cube_cubeP6),
+            (self.Cube_cubeP6, self.Cube_cubeP3, self.Cube_cubeP7),
         ]
 
     def set_position(self, pos_x, pos_y, pos_z):

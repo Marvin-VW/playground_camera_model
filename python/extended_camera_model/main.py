@@ -12,6 +12,7 @@ from utils.color import Color
 from utils.render_faces import RenderFaces
 from utils.clipping_space import Clipping_Space
 from utils.fps_counter import FpsCounter
+from utils.triangle2normal import CalculateNormal
 
 class Engine:
 
@@ -73,6 +74,11 @@ class Engine:
 
                 transformed_triangles = self.camera_model.camera_transform(object, self.C_T_V, self.V_T_Cube)
                 ndc_points = self.clipping_space.cube_in_space(transformed_triangles)
+
+                for triangle in transformed_triangles:
+
+                    normal_start, normal_end = CalculateNormal.normal(triangle)
+                    self.camera_model.draw_camera_image_arrow(normal_start, normal_end)
 
                 self.camera_model.draw_all_cube_points(ndc_points)
                 self.camera_model.draw_cube_lines(ndc_points)
