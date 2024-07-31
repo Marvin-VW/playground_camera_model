@@ -1,6 +1,6 @@
 import numpy as np
 import cv2 as cv
-from typing import List
+from typing import List, Tuple
 
 from utils.cube import Cube
 
@@ -102,3 +102,5 @@ class CameraModel:
 
     def reset_camera_image(self) -> None:
         self.camera_image.fill(255)
+
+    

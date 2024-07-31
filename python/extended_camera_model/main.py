@@ -48,7 +48,11 @@ class Engine:
         cub1 = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
         self.render_list.append(cub1)
 
+
         while True:
+
+
+            self.window.handle_movement()
 
             self.fps_counter.update()
 
