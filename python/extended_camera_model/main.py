@@ -12,6 +12,7 @@ from utils.color import Color
 from utils.render_faces import RenderFaces
 from utils.clipping_space import Clipping_Space
 from utils.fps_counter import FpsCounter
+from utils.vectors import CalculateNormal
 
 class Engine:
 
@@ -29,6 +30,8 @@ class Engine:
         self.V_T_Cube = None
 
         self.fps_counter = FpsCounter(60)
+
+        self.show_normals = False
 
 
     def fps_setter(self):
@@ -48,6 +51,10 @@ class Engine:
         cub1 = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
         self.render_list.append(cub1)
 
+        for cube in self.render_list:
+            cube.set_dafault_color(Color.ROYAL_BLUE)
+            #top, bottom, left, right, front, back
+            #cube.set_color_faces(Color.ROYAL_BLUE, Color.ROYAL_BLUE, Color.LIGHT_BLUE, Color.LIGHT_BLUE, Color.ORANGE_RED, Color.ORANGE_RED)
 
         while True:
 
@@ -57,22 +64,46 @@ class Engine:
             self.fps_counter.update()
 
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
+            camera_vector = CalculateNormal.get_camera_vector(self.window)
+
 
             self.camera_model.reset_camera_image()
+            face_points_front = []
 
-            for object in self.render_list:
+            for cube in self.render_list: 
+                
+                #fit cube points to view
+                transformed_triangles = self.camera_model.camera_transform(cube, self.C_T_V, self.V_T_Cube)
+                face_points_front.append(RenderFaces.generate_center_points(cube, transformed_triangles)) 
+
+            sorted_cube_list = RenderFaces.set_render_order(self.render_list, face_points_front)
+            for object in sorted_cube_list:
+
                 transformed_triangles = self.camera_model.camera_transform(object, self.C_T_V, self.V_T_Cube)
-
                 ndc_points = self.clipping_space.cube_in_space(transformed_triangles)
 
-                self.camera_model.draw_all_cube_points(ndc_points)
-                self.camera_model.draw_cube_lines(ndc_points)
-                self.camera_model.fill_cube_faces(ndc_points, Color.ROYAL_BLUE)
+                #z coords of normals
+                dot_product_result = []
+
+                for triangle in ndc_points:
+
+                    scaled_normal, normal_start, normal_end = CalculateNormal.normal(triangle)
+                    dot_product_result.append(np.dot(scaled_normal, camera_vector))
+                    if self.show_normals:
+                        self.camera_model.draw_camera_image_arrow(normal_start, normal_end)
+
+                final_render_list = []
+
+                for pos, res in enumerate(dot_product_result):
+                    if res < 0:
+                        final_render_list.append(ndc_points[pos])
+
+                self.camera_model.draw_all_cube_points(final_render_list)
+                self.camera_model.draw_cube_lines(final_render_list)
+                #self.camera_model.fill_cube_faces(ndc_points, object)
 
             self.fps_setter()
             self.window.window_show(self.camera_model)
-
-
 
 engine = Engine()
 engine.main()
