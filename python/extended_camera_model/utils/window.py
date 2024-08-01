@@ -135,17 +135,17 @@ class Window:
                     self.camera_system_translation_x -= camera_speed
                     cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
                 if key == ord('a'):
-                    self.camera_system_translation_z += camera_speed
-                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
-                if key == ord('d'):
-                    self.camera_system_translation_z -= camera_speed
-                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
-                if key == ord('q'):
-                    self.camera_system_translation_y -= camera_speed
-                    cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
-                if key == ord('e'):
                     self.camera_system_translation_y += camera_speed
                     cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+                if key == ord('d'):
+                    self.camera_system_translation_y -= camera_speed
+                    cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+                if key == ord('q'):
+                    self.camera_system_translation_z -= camera_speed
+                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
+                if key == ord('e'):
+                    self.camera_system_translation_z += camera_speed
+                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
 
 
     def mouse_event_handler(self, event, x, y, flags, param):
