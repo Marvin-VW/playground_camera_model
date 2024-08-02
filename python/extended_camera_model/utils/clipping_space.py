@@ -70,9 +70,6 @@ class Clipping_Space:
                 for pos, point in enumerate(full_point_list):
                     full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
 
-                print("two new points")
-                print(full_point_list)
-        
                 full_triangle_list.append(full_point_list)
 
             #two points inside -> two new triangles
@@ -88,9 +85,6 @@ class Clipping_Space:
                 for pos, point in enumerate(full_point_list):
                     full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
 
-                print("two new triangles (1)")
-                print(full_point_list)
-
                 full_triangle_list.append(full_point_list)
                 full_point_list = []
         
@@ -101,9 +95,6 @@ class Clipping_Space:
                 
                 for pos, point in enumerate(full_point_list):
                     full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
-
-                print("two new triangles (2)")
-                print(full_point_list)
 
                 full_triangle_list.append(full_point_list)
 

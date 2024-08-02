@@ -121,7 +121,7 @@ class Window:
 
 
     def handle_movement(self):
-            camera_speed = 50
+            camera_speed = 100
             current_time = time.time()
             if current_time - self.last_update_time >= self.update_interval:
                 self.last_update_time = current_time

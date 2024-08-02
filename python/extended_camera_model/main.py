@@ -123,7 +123,7 @@ class Engine:
                     self.camera_model.draw_cube_lines(ndc_points)
 
                     
-                    #self.camera_model.fill_cube_faces(ndc_points, object)
+                    self.camera_model.fill_cube_faces(ndc_points, object)
 
             self.fps_setter()
             self.window.window_show(self.camera_model)
