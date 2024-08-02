@@ -31,7 +31,8 @@ class Engine:
 
         self.fps_counter = FpsCounter(60)
 
-        self.show_normals = False
+        self.show_normals = True
+        self.culling = False
 
 
     def fps_setter(self):
@@ -39,7 +40,6 @@ class Engine:
         cv.putText(self.camera_model.camera_image, f"FPS: {fps:.0f}", (10, 30), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
 
     def main(self):
-
         self.W_T_V = Matrix_Functions.create_homogeneous_transformation_matrix(0, 0, 0, 0, 0, 0, 0)
         self.V_T_C = Matrix_Functions.create_homogeneous_transformation_matrix(0, 0, 0, 0, 0, 0, 0)
         self.C_T_V = np.linalg.inv(self.V_T_C)
@@ -58,52 +58,84 @@ class Engine:
 
         while True:
 
-
             self.window.handle_movement()
-
             self.fps_counter.update()
+            self.camera_model.reset_camera_image()
 
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
-            camera_vector = CalculateNormal.get_camera_vector(self.window)
+            camera_vector_world = CalculateNormal.get_camera_vector(self.window)
 
+                #face_points_front = []
 
-            self.camera_model.reset_camera_image()
-            face_points_front = []
+                # for cube in self.render_list: 
+                    
+                #     #fit cube points to view
+                #     transformed_triangles = self.camera_model.camera_transform(cube, self.C_T_V, self.V_T_Cube)
+                #     face_points_front.append(RenderFaces.generate_center_points(cube, transformed_triangles)) 
 
-            for cube in self.render_list: 
-                
-                #fit cube points to view
-                transformed_triangles = self.camera_model.camera_transform(cube, self.C_T_V, self.V_T_Cube)
-                face_points_front.append(RenderFaces.generate_center_points(cube, transformed_triangles)) 
+                # sorted_cube_list = RenderFaces.set_render_order(self.render_list, face_points_front)
 
-            sorted_cube_list = RenderFaces.set_render_order(self.render_list, face_points_front)
-            for object in sorted_cube_list:
+            
+            for object in self.render_list:
 
+                dot_product_result = []
+                pos = 0
+
+                for triangle in object.triangles:
+
+                    #transform to world coordinates
+                    transformed_triangle = CalculateNormal.world_transform(triangle, self.V_T_Cube)
+
+                    #get normals for every triangle
+                    scaled_normal, normal_start, normal_end = CalculateNormal.normal(transformed_triangle)
+                    #transfer normals from world to cam space
+                    transformed_normals = CalculateNormal.camera_transform([normal_start, normal_end], self.C_T_V)
+
+                    if self.culling:
+                        #if enabled will only show faces that are visible
+                        dot_product_result.append(Engine.is_triangle_facing_camera(scaled_normal, transformed_triangle[0].flatten()[:3], camera_vector_world))
+
+                    if self.show_normals:
+                        #if enabled will show the normals for every triangle
+                        self.camera_model.draw_camera_image_arrow(transformed_normals[0], transformed_normals[1])
+
+                #transform to camera space
                 transformed_triangles = self.camera_model.camera_transform(object, self.C_T_V, self.V_T_Cube)
+
+                #clip triangles
                 ndc_points = self.clipping_space.cube_in_space(transformed_triangles)
 
-                #z coords of normals
-                dot_product_result = []
+                if self.culling:
 
-                for triangle in ndc_points:
+                    final_render_list = []
 
-                    scaled_normal, normal_start, normal_end = CalculateNormal.normal(triangle)
-                    dot_product_result.append(np.dot(scaled_normal, camera_vector))
-                    if self.show_normals:
-                        self.camera_model.draw_camera_image_arrow(normal_start, normal_end)
+                    for pos, res in enumerate(dot_product_result):
+                        if res == True:
+                            final_render_list.append(ndc_points[pos])
 
-                final_render_list = []
 
-                for pos, res in enumerate(dot_product_result):
-                    if res < 0:
-                        final_render_list.append(ndc_points[pos])
+                    self.camera_model.draw_all_cube_points(final_render_list)
+                    self.camera_model.draw_cube_lines(final_render_list)
+                    #self.camera_model.fill_cube_faces(final_render_list, object)
 
-                self.camera_model.draw_all_cube_points(final_render_list)
-                self.camera_model.draw_cube_lines(final_render_list)
-                #self.camera_model.fill_cube_faces(ndc_points, object)
+                else:
+                    self.camera_model.draw_all_cube_points(ndc_points)
+                    self.camera_model.draw_cube_lines(ndc_points)
+
+                    
+                    #self.camera_model.fill_cube_faces(ndc_points, object)
 
             self.fps_setter()
             self.window.window_show(self.camera_model)
+
+    @staticmethod
+    def is_triangle_facing_camera(normal, tri, cam):
+
+        dot_product = (normal[0] * (tri[0] - cam[0]) +
+                    normal[1] * (tri[1] - cam[1]) +
+                    normal[2] * (tri[2] - cam[2]))
+
+        return dot_product < 0.0
 
 engine = Engine()
 engine.main()

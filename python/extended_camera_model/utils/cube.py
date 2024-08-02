@@ -80,7 +80,7 @@ class Cube:
     
     def set_dafault_color(self, color):
         self.default_color = color
-        self.face_colors = [self.default_color] * 12
+        self.face_colors = [self.default_color] * 18
     
     def set_color_faces(self, top, bottom, left, right, front, back):
         self.face_colors = [top, top, bottom, bottom, left, left, right, right, front, front, back, back]

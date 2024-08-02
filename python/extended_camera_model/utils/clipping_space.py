@@ -62,12 +62,16 @@ class Clipping_Space:
                 _, new_point1 = self.find_intersection_with_plane(inside_point[0], outside_point[0])
                 _, new_point2 = self.find_intersection_with_plane(inside_point[0], outside_point[1])
 
-                full_point_list.append(inside_point[0])
                 full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
+                full_point_list.append(inside_point[0])
                 full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
+
 
                 for pos, point in enumerate(full_point_list):
                     full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
+
+                print("two new points")
+                print(full_point_list)
         
                 full_triangle_list.append(full_point_list)
 
@@ -77,23 +81,29 @@ class Clipping_Space:
                 _, new_point2 = self.find_intersection_with_plane(inside_point[1], outside_point[0])
 
                 #first triangle
+                full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
                 full_point_list.append(inside_point[0])
                 full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
-                full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
                 
                 for pos, point in enumerate(full_point_list):
                     full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
+
+                print("two new triangles (1)")
+                print(full_point_list)
 
                 full_triangle_list.append(full_point_list)
                 full_point_list = []
         
                 #second triangle
+                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
                 full_point_list.append(inside_point[0])
                 full_point_list.append(inside_point[1])
-                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
                 
                 for pos, point in enumerate(full_point_list):
                     full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
+
+                print("two new triangles (2)")
+                print(full_point_list)
 
                 full_triangle_list.append(full_point_list)
 
@@ -130,6 +140,7 @@ class Clipping_Space:
         B = point2.flatten()
         B = B[:3]
 
+        #get intersections with borders
         intersections = {
             "left": self.intersection_with_plane_x(A, B, planes_x[0]),
             "right": self.intersection_with_plane_x(A, B, planes_x[1]),
@@ -137,6 +148,7 @@ class Clipping_Space:
             "top": self.intersection_with_plane_y(A, B, planes_y[1])
         }
 
+        #delete points with "None"
         valid_intersections = {}
         for plane, point in intersections.items():
             if point is not None:
@@ -145,6 +157,7 @@ class Clipping_Space:
         if not valid_intersections:
             return None, None
 
+        #get closest border
         closest_intersection = min(valid_intersections, key=lambda k: np.linalg.norm(valid_intersections[k] - A))
 
         return closest_intersection, valid_intersections[closest_intersection]

@@ -45,11 +45,12 @@ class CameraModel:
                 transformed_triangle = tuple(C_T_V @ V_T_Cube @ vertex for vertex in triangle_tuple)
                 transformed_triangles.append(transformed_triangle)
         else:
-            for triangle_tuple in object:
-                transformed_triangle = tuple(C_T_V @ V_T_Cube @ vertex for vertex in triangle_tuple)
+            for point in object:
+                transformed_triangle = tuple(C_T_V @ V_T_Cube @ point)
                 transformed_triangles.append(transformed_triangle)
 
         return transformed_triangles
+        
 
     def draw_camera_image_point(self, C_point: np.array) -> None:
         I_point = np.matmul(self.I_T_C, C_point)

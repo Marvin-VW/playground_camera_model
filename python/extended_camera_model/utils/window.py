@@ -26,6 +26,10 @@ class Window:
 
         self.mouse_is_pressed = False
         self.last_mouse_position = (0, 0)
+
+        self.last_update_time = time.time()
+        self.update_interval = 0.1
+
         self.window_creator()
     
     def window_creator(self):
@@ -117,28 +121,31 @@ class Window:
 
 
     def handle_movement(self):
-        camera_speed = 50
-        cube_speed = 10
-        key = cv.waitKey(30) & 0xFF
-    
-        if key == ord('w'):
-            self.camera_system_translation_x += camera_speed
-            cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
-        if key == ord('s'):
-            self.camera_system_translation_x -= camera_speed
-            cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
-        if key == ord('a'):
-            self.camera_system_translation_z += camera_speed
-            cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
-        if key == ord('d'):
-            self.camera_system_translation_z -= camera_speed
-            cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
-        if key == ord('q'):
-            self.camera_system_translation_y -= camera_speed
-            cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
-        if key == ord('e'):
-            self.camera_system_translation_y += camera_speed
-            cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+            camera_speed = 50
+            current_time = time.time()
+            if current_time - self.last_update_time >= self.update_interval:
+                self.last_update_time = current_time
+                
+                key = cv.waitKey(30) & 0xFF
+            
+                if key == ord('w'):
+                    self.camera_system_translation_x += camera_speed
+                    cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
+                if key == ord('s'):
+                    self.camera_system_translation_x -= camera_speed
+                    cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
+                if key == ord('a'):
+                    self.camera_system_translation_y += camera_speed
+                    cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+                if key == ord('d'):
+                    self.camera_system_translation_y -= camera_speed
+                    cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+                if key == ord('q'):
+                    self.camera_system_translation_z -= camera_speed
+                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
+                if key == ord('e'):
+                    self.camera_system_translation_z += camera_speed
+                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
 
 
     def mouse_event_handler(self, event, x, y, flags, param):

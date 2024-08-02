@@ -1,3 +1,4 @@
+# Copyright (C) 2024 Marvin-VW
 import numpy as np
 import math
 from math import pi
@@ -21,6 +22,7 @@ class CalculateNormal:
             normal_start (np.ndarray): The starting point of the normal vector.
             normal_end (np.ndarray): The ending point of the normal vector.
         """
+
                 
         p1 = triangle[0].flatten()
         p1 = p1[:3]
@@ -50,19 +52,22 @@ class CalculateNormal:
 
         # scale vector
         scaled_normal = normalized_normal * scale
-        
+
+        #z,x,y
+        scaled_normal = (scaled_normal[0], scaled_normal[1], scaled_normal[2])
+
         normal_start = centroid
         normal_end = centroid + scaled_normal
 
         # reshape to project struct.
         normal_start = np.vstack([normal_start.reshape(-1, 1), [[1]]])
         normal_end = np.vstack([normal_end.reshape(-1, 1), [[1]]])
-        
+
         return scaled_normal, normal_start, normal_end
     
+
     @staticmethod
     def get_camera_vector(window):
-
         x = (window.get_camera_system_translation_x() - 10000) / 1000.0
         y = (window.get_camera_system_translation_z() - 10000) / 1000.0
         z = (window.get_camera_system_translation_y() - 10000) / 1000.0
@@ -78,8 +83,33 @@ class CalculateNormal:
         final_vector_y = y + vy
         final_vector_z = z + vz
 
-        # Camera's final vector
-        final_vector = (final_vector_z, final_vector_y, -final_vector_x)
-        print(final_vector)
+        final_vector = (final_vector_x, final_vector_y, final_vector_z)
 
         return final_vector
+
+
+    @staticmethod
+    def transform_normals_to_world_space(normals, V_T_Cube):
+        normals_in_world_space = V_T_Cube[:3, :3] @ normals
+        return normals_in_world_space
+    
+
+    @staticmethod
+    def world_transform(triangle, V_T_Cube):
+        transformed_triangles = []
+
+        for point in triangle:
+                transformed_triangle = V_T_Cube @ point
+                transformed_triangles.append(transformed_triangle)
+
+        return transformed_triangles
+    
+    @staticmethod
+    def camera_transform(object, C_T_V):
+        transformed_triangles = []
+
+        for point in object:
+            transformed_triangle = tuple(C_T_V @ point)
+            transformed_triangles.append(transformed_triangle)
+
+        return transformed_triangles
