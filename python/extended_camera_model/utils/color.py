@@ -1,4 +1,7 @@
+# Copyright (C) 2024 Marvin-VW
 import random
+import numpy as np
+import colorsys
 
 class Color:
     ALICE_BLUE = (255, 248, 240)
@@ -147,3 +150,27 @@ class Color:
         color_names = [attr for attr in dir(cls) if not callable(getattr(cls, attr))]
         random_color_name = random.choice(color_names)
         return getattr(cls, random_color_name)
+
+    @staticmethod
+    def intensity(light_direction, normal):
+        norm = np.linalg.norm(light_direction)
+        normalized_light_direction = light_direction / norm
+        intensity = abs(np.dot(normalized_light_direction, normal))
+        return intensity
+    
+    @staticmethod
+    def bgr_to_hsl(b, g, r):
+        return colorsys.rgb_to_hls(r/255.0, g/255.0, b/255.0)
+    
+    @staticmethod
+    def hsl_to_bgr( h, l, s):
+        r, g, b = colorsys.hls_to_rgb(h, l, s)
+        return int(b * 255), int(g * 255), int(r * 255)
+
+    @staticmethod
+    def adjust_bgr_intensity(base_color, intensity):
+        B, G, R = base_color
+        H, L, S = Color.bgr_to_hsl(B, G, R)
+        new_L = L * intensity
+        new_B, new_G, new_R = Color.hsl_to_bgr(H, new_L, S)
+        return (new_B, new_G, new_R)

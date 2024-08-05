@@ -1,9 +1,10 @@
+# Copyright (C) 2024 twyleg, Marvin-VW
 import numpy as np
 import cv2 as cv
 from typing import List, Tuple
 
-from utils.cube import Cube
-
+from utils.shape import Cube
+from utils.shape import Triangle4D
 
 class CameraModel:
     def __init__(self, sensor_width: float, sensor_height: float, focal_length: float, resolution_x: int, resolution_y: int, u0: int, v0: int):
@@ -37,32 +38,53 @@ class CameraModel:
         self.I_T_C = np.matmul(matrix_k, matrix_c)
 
     
-    def camera_transform(self, object, C_T_V, V_T_Cube) -> List:
+    @staticmethod
+    def transform_normals_to_world_space(normals, V_T_Cube):
+        normals_in_world_space = V_T_Cube[:3, :3] @ normals
+        return normals_in_world_space
+    
+
+    @staticmethod
+    def world_transform(triangle, V_T_Cube):
         transformed_triangles = []
 
-        if isinstance(object, Cube):
-            for triangle_tuple in object.triangles:
-                transformed_triangle = tuple(C_T_V @ V_T_Cube @ vertex for vertex in triangle_tuple)
-                transformed_triangles.append(transformed_triangle)
-        else:
-            for point in object:
-                transformed_triangle = tuple(C_T_V @ V_T_Cube @ point)
+        for point in triangle:
+                transformed_triangle = V_T_Cube @ point
                 transformed_triangles.append(transformed_triangle)
 
         return transformed_triangles
-        
+    
+    @staticmethod
+    def camera_transform(object, C_T_V):
+        transformed_triangles = []
+
+        for point in object:
+            transformed_triangle = tuple(C_T_V @ point)
+            transformed_triangles.append(transformed_triangle)
+
+        return transformed_triangles
+    
+    
+    def draw_all_cube_points(self, triangles: List) -> None:
+
+        for triangle in triangles:
+            for point in triangle.camera_points:
+                self.draw_camera_image_point(point)
+
 
     def draw_camera_image_point(self, C_point: np.array) -> None:
         I_point = np.matmul(self.I_T_C, C_point)
         u = int(I_point[0] / I_point[2])
         v = int(I_point[1] / I_point[2])
         cv.circle(self.camera_image, (u, v), 5, (255, 0, 0), 2)
+    
+    def draw_all_cube_lines(self, triangles : List) -> None:
 
-    def draw_all_cube_points(self, cube_points) -> None:
-
-        for tuple in cube_points:
-            for point in tuple:
-                self.draw_camera_image_point(point)
+        for triangle in triangles:
+            for i in range(3):
+                C_point0 = triangle.camera_points[i]
+                C_point1 = triangle.camera_points[(i + 1) % 3]
+                self.draw_camera_image_line(C_point0, C_point1)
 
 
     def draw_camera_image_line(self, C_point0: np.array, C_point1: np.array) -> None:
@@ -89,20 +111,12 @@ class CameraModel:
 
         cv.arrowedLine(self.camera_image, (u0, v0), (u1, v1), (0, 255, 0), 2)
 
-    def draw_cube_lines(self, triangles) -> None:
 
+    def fill_cube_faces(self, triangles) -> None:
         for triangle in triangles:
-            for i in range(3):
-                C_point0 = triangle[i]
-                C_point1 = triangle[(i + 1) % 3]
-                self.draw_camera_image_line(C_point0, C_point1)
-
-
-    def fill_cube_faces(self, triangles, cube) -> None:
-        for pos, triangle in enumerate(triangles):
             I_points = []
 
-            for C_point in triangle:
+            for C_point in triangle.camera_points:
                 I_point = np.matmul(self.I_T_C, C_point)
                 
                 u = int(I_point[0] / I_point[2])
@@ -111,10 +125,8 @@ class CameraModel:
                 I_points.append((u, v))
             
             Poly_Points = np.array(I_points, np.int32)
-            color = cube.get_color_face(pos)
-            cv.fillPoly(self.camera_image, [Poly_Points], color)
+            cv.fillPoly(self.camera_image, [Poly_Points], triangle.color)
+
 
     def reset_camera_image(self) -> None:
         self.camera_image.fill(255)
-
-    

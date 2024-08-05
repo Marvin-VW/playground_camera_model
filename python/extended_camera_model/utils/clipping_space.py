@@ -1,5 +1,6 @@
 # Copyright (C) 2024 Marvin-VW
 import numpy as np
+import copy
 
 class Clipping_Space:
     def __init__(self) -> None:
@@ -9,7 +10,7 @@ class Clipping_Space:
         near = 1
         far = 100.0
         self.projection_matrix = self.create_perspective_projection_matrix(fov, aspect_ratio, near, far)
-        self.border = 1
+        self.border = 0.9
 
     def create_perspective_projection_matrix(self, fov, aspect_ratio, near, far):
         
@@ -28,13 +29,13 @@ class Clipping_Space:
         full_triangle_list = []
 
         #for each triangle:
-        for tuple in cube_points:
+        for triangle in cube_points:
 
             full_point_list = []
             inside_point = []
             outside_point = []
 
-            for point in tuple:
+            for point in triangle.camera_points:
                 clip_space_point = np.matmul(self.projection_matrix, point)
                 ndc_point = clip_space_point / clip_space_point[3]
 
@@ -45,13 +46,9 @@ class Clipping_Space:
                     outside_point.append(ndc_point)
 
 
-            #all points inside -> return points
+            #all points inside -> return triangle
             if len(inside_point) == 3:
-                for point in inside_point:
-                    ndc_point = np.matmul(np.linalg.inv(self.projection_matrix), point)
-                    full_point_list.append(ndc_point)
-
-                full_triangle_list.append(full_point_list)
+                full_triangle_list.append(triangle)
 
             #no points inside -> return none
             elif len(inside_point) == 0:
@@ -62,41 +59,48 @@ class Clipping_Space:
                 _, new_point1 = self.find_intersection_with_plane(inside_point[0], outside_point[0])
                 _, new_point2 = self.find_intersection_with_plane(inside_point[0], outside_point[1])
 
-                full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
                 full_point_list.append(inside_point[0])
+                full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
                 full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
 
 
                 for pos, point in enumerate(full_point_list):
-                    full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
 
-                full_triangle_list.append(full_point_list)
+                    full_point_list[pos] = self.transfer_back_camera_space(point)
+                    triangle.camera_points = full_point_list
+
+                full_triangle_list.append(triangle)
 
             #two points inside -> two new triangles
             elif len(inside_point) == 2:
                 _, new_point1 = self.find_intersection_with_plane(inside_point[0], outside_point[0])
                 _, new_point2 = self.find_intersection_with_plane(inside_point[1], outside_point[0])
 
-                #first triangle
+                # First triangle
+                full_point_list = []
                 full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
-                full_point_list.append(inside_point[0])
                 full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
+                full_point_list.append(inside_point[0])
                 
                 for pos, point in enumerate(full_point_list):
-                    full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
-
-                full_triangle_list.append(full_point_list)
+                    full_point_list[pos] = self.transfer_back_camera_space(point)
+                
+                triangle_new1 = copy.deepcopy(triangle)
+                triangle_new1.camera_points = full_point_list
+                full_triangle_list.append(triangle_new1)
+                
+                # Second triangle
                 full_point_list = []
-        
-                #second triangle
-                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
                 full_point_list.append(inside_point[0])
+                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
                 full_point_list.append(inside_point[1])
                 
                 for pos, point in enumerate(full_point_list):
-                    full_point_list[pos] = np.matmul(np.linalg.inv(self.projection_matrix), point)
-
-                full_triangle_list.append(full_point_list)
+                    full_point_list[pos] = self.transfer_back_camera_space(point)
+                
+                triangle_new2 = copy.deepcopy(triangle)
+                triangle_new2.camera_points = full_point_list
+                full_triangle_list.append(triangle_new2)
 
         return full_triangle_list
     
@@ -152,3 +156,13 @@ class Clipping_Space:
         closest_intersection = min(valid_intersections, key=lambda k: np.linalg.norm(valid_intersections[k] - A))
 
         return closest_intersection, valid_intersections[closest_intersection]
+    
+    
+    def transfer_back_camera_space(self, point):
+        # Invert the projection transformation
+        converted_point = np.matmul(np.linalg.inv(self.projection_matrix), point)
+        converted_point /= converted_point[3]  # Normalize by w to get back the original point
+        #print("Back to Homogeneous Point:", final)
+
+        return converted_point
+

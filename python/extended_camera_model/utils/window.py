@@ -1,3 +1,4 @@
+# Copyright (C) 2024 twyleg, Daniel-VW, Marvin-VW
 import cv2 as cv
 import numpy as np
 import time
@@ -8,17 +9,17 @@ class Window:
     def __init__(self):
         self.camera_system_translation_x = 10000
         self.camera_system_translation_y = 10000
-        self.camera_system_translation_z = 11000
+        self.camera_system_translation_z = 10000
         self.camera_system_rotation_roll = 2700
         self.camera_system_rotation_pitch = 0
         self.camera_system_rotation_yaw = 2700
 
         self.cube_system_translation_x = 16000
         self.cube_system_translation_y = 10000
-        self.cube_system_translation_z = 11000
+        self.cube_system_translation_z = 10000
         self.cube_system_rotation_roll = 0
         self.cube_system_rotation_pitch = 0
-        self.cube_system_rotation_yaw = 0
+        self.cube_system_rotation_yaw = 300
         self.cube_system_scale = 1
 
         self.camera_window_name = "camera settings"
@@ -29,6 +30,10 @@ class Window:
 
         self.last_update_time = time.time()
         self.update_interval = 0.1
+        
+        self.show_normals = False
+        self.show_planes = False
+        self.show_points = False
 
         self.window_creator()
     
@@ -54,6 +59,11 @@ class Window:
         cv.createTrackbar("Yaw", "cube settings", 0, 3600, self.nothing)
         cv.createTrackbar("Scale", "cube settings", 1, 10, self.nothing)
 
+        cv.createTrackbar("Normals", "cube settings", 0, 1, self.toggle_normal)
+        cv.createTrackbar("Planes", "cube settings", 0, 1, self.toggle_planes)
+        cv.createTrackbar("Points", "cube settings", 0, 1, self.toggle_points)
+
+
         # Set initial positions of the trackbars
         cv.setTrackbarPos("X", "camera settings", self.camera_system_translation_x)
         cv.setTrackbarPos("Y", "camera settings", self.camera_system_translation_y)
@@ -70,7 +80,20 @@ class Window:
         cv.setTrackbarPos("Yaw", "cube settings", self.cube_system_rotation_yaw)
         cv.setTrackbarPos("Scale", "cube settings", self.cube_system_scale)
 
+        cv.setTrackbarPos("Normals", "cube settings", 0)
+        cv.setTrackbarPos("Planes", "cube settings", 0)
+        cv.setTrackbarPos("Points", "cube settings", 1)
+
         cv.setMouseCallback("image window", self.mouse_event_handler)
+
+    def toggle_normal(self, value):
+        self.show_normals = not self.show_normals
+
+    def toggle_planes(self, value):
+        self.show_planes = not self.show_planes
+
+    def toggle_points(self, value):
+        self.show_points = not self.show_points
 
     def window_show(self, class_cam):
         cv.imshow("image window", class_cam.camera_image)
@@ -116,7 +139,7 @@ class Window:
         return cv.getTrackbarPos("Scale", self.cube_window_name)
 
     @staticmethod
-    def nothing(x):
+    def nothing(value):
         pass
 
 
@@ -146,7 +169,6 @@ class Window:
                 if key == ord('e'):
                     self.camera_system_translation_z += camera_speed
                     cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
-
 
     def mouse_event_handler(self, event, x, y, flags, param):
         if event == cv.EVENT_LBUTTONDOWN:

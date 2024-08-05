@@ -1,3 +1,4 @@
+# Copyright (C) 2024 twyleg, Marvin-VW
 import numpy as np
 from math import cos, sin, pi
 

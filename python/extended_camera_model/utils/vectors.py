@@ -16,13 +16,6 @@ class CalculateNormal:
 
     @staticmethod
     def normal(triangle, scale = 0.5):
-        """
-        Calculate the normal vector of the triangle using the cross product.
-        Returns:
-            normal_start (np.ndarray): The starting point of the normal vector.
-            normal_end (np.ndarray): The ending point of the normal vector.
-        """
-
                 
         p1 = triangle[0].flatten()
         p1 = p1[:3]
@@ -79,37 +72,10 @@ class CalculateNormal:
         vy = math.sin(yaw_rad) * math.cos(pitch_rad)
         vz = math.sin(pitch_rad)
         
-        final_vector_x = x + vx
-        final_vector_y = y + vy
-        final_vector_z = z + vz
+        final_vector_x = vx
+        final_vector_y = vy + 1
+        final_vector_z = vz
 
         final_vector = (final_vector_x, final_vector_y, final_vector_z)
 
         return final_vector
-
-
-    @staticmethod
-    def transform_normals_to_world_space(normals, V_T_Cube):
-        normals_in_world_space = V_T_Cube[:3, :3] @ normals
-        return normals_in_world_space
-    
-
-    @staticmethod
-    def world_transform(triangle, V_T_Cube):
-        transformed_triangles = []
-
-        for point in triangle:
-                transformed_triangle = V_T_Cube @ point
-                transformed_triangles.append(transformed_triangle)
-
-        return transformed_triangles
-    
-    @staticmethod
-    def camera_transform(object, C_T_V):
-        transformed_triangles = []
-
-        for point in object:
-            transformed_triangle = tuple(C_T_V @ point)
-            transformed_triangles.append(transformed_triangle)
-
-        return transformed_triangles
