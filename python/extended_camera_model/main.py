@@ -47,7 +47,7 @@ class Engine:
 
         while True:
 
-            self.window.handle_movement()
+            #self.window.handle_movement()
             self.fps_counter.update()
             self.camera_model.reset_camera_image()
 

@@ -3,9 +3,6 @@ import numpy as np
 import cv2 as cv
 from typing import List, Tuple
 
-from utils.shape import Cube
-from utils.shape import Triangle4D
-
 class CameraModel:
     def __init__(self, sensor_width: float, sensor_height: float, focal_length: float, resolution_x: int, resolution_y: int, u0: int, v0: int):
         self.sensor_width: float = sensor_width
