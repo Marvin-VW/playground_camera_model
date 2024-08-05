@@ -100,16 +100,19 @@ class CameraModel:
         cv.line(self.camera_image, (u0, v0), (u1, v1), (0, 0, 0), 1)
 
     def draw_camera_image_arrow(self, C_point0: np.array, C_point1: np.array) -> None:
-        I_point0 = np.matmul(self.I_T_C, C_point0)
-        I_point1 = np.matmul(self.I_T_C, C_point1)
+        try:
+            I_point0 = np.matmul(self.I_T_C, C_point0)
+            I_point1 = np.matmul(self.I_T_C, C_point1)
 
-        u0 = int(I_point0[0] / I_point0[2])
-        v0 = int(I_point0[1] / I_point0[2])
+            u0 = int(I_point0[0] / I_point0[2])
+            v0 = int(I_point0[1] / I_point0[2])
 
-        u1 = int(I_point1[0] / I_point1[2])
-        v1 = int(I_point1[1] / I_point1[2])
+            u1 = int(I_point1[0] / I_point1[2])
+            v1 = int(I_point1[1] / I_point1[2])
 
-        cv.arrowedLine(self.camera_image, (u0, v0), (u1, v1), (0, 255, 0), 2)
+            cv.arrowedLine(self.camera_image, (u0, v0), (u1, v1), (0, 255, 0), 2)
+        except:
+            raise ValueError(f"Could draw normal {C_point0}, {C_point1}")
 
 
     def fill_cube_faces(self, triangles) -> None:

@@ -35,7 +35,6 @@ class Engine:
                         normal[2] * (tri[2] - cam[2])   )
         return dot_product < 0.0
 
-
     def main(self):
 
         # file_path = r"utils\resources\VideoShip.obj"
@@ -76,9 +75,10 @@ class Engine:
                     visiable_triangles.append(triangle)
 
             #sort triangles by z
+            sorted_list = sorted(visiable_triangles, key=lambda triangle: triangle.camera_points[0][2], reverse=True)
 
             clipped_triangles = []
-            clipped_triangles.extend(self.clipping_space.cube_in_space(visiable_triangles))
+            clipped_triangles.extend(self.clipping_space.cube_in_space(sorted_list))
 
             self.camera_model.draw_all_cube_lines(clipped_triangles)
             if self.window.show_points:
@@ -88,7 +88,6 @@ class Engine:
 
             self.fps_setter()
             self.window.window_show(self.camera_model)
-
 
 engine = Engine()
 engine.main()
