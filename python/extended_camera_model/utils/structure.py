@@ -1,4 +1,4 @@
-from utils.shape import Cube, Triangle4D
+from utils.shape import Cube, Rectangle ,Triangle4D
 import numpy as np
 
 class Structure_Generator:
@@ -21,6 +21,15 @@ class Structure_Generator:
 
         return cubes
     
+    @staticmethod
+    def tree(size=0.5, start_x=0, start_y=0, start_z=0): 
+        cubes = []
+        
+        rec = Rectangle(1, 1, 3, 0, 0, 0)
+        cubes.append(rec)
+
+        return cubes
+
     @staticmethod  
     def create_point(x: float, y: float, z: float) -> np.array:
         return np.array([

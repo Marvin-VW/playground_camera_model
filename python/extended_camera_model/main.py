@@ -24,6 +24,7 @@ class Engine:
         self.C_T_V = np.linalg.inv(self.V_T_C)
         self.V_T_Cube = Matrix_Functions.create_homogeneous_transformation_matrix(2, 0, 1, 0, 0, 0, 0)
         self.render_list = []
+        self.mesh_list = []
 
     def fps_setter(self):
         fps = self.fps_counter.get_fps_filtered()
@@ -38,12 +39,20 @@ class Engine:
     def main(self):
 
         # file_path = r"utils\resources\VideoShip.obj"
-        # struc = Structure_Generator.load_from_obj(file_path)
-        # self.render_list.extend(struc)
+        #struc = Structure_Generator.load_from_obj(file_path)
+        #self.render_list.extend(struc)
 
-        #self.render_list.extend(Structure_Generator.ground(width=5, height=1, depth=5, size=1, start_x=0, start_y=0, start_z=0))
-        cube = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
-        self.render_list.extend(cube.mesh)
+
+        self.render_list.extend(Structure_Generator.tree())
+        
+        # cube = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
+        # self.render_list.extend(cube)
+
+        for cube in self.render_list:
+            print(cube)
+            self.mesh_list.extend(cube.mesh)
+
+        print(self.mesh_list)
 
         while True:
 
@@ -54,11 +63,9 @@ class Engine:
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
             camera_vector_world = self.camera_model.get_camera_vectors(self.V_T_C)
 
-            print(camera_vector_world)
-
             visiable_triangles = []
 
-            for triangle in self.render_list:
+            for triangle in self.mesh_list:
 
                 triangle.world_points = self.camera_model.world_transform(triangle.points, self.V_T_Cube)
                 triangle.normal, normal_start, normal_end, triangle.centroids = CalculateNormal.normal(triangle.world_points)
