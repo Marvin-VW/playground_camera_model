@@ -10,7 +10,7 @@ class Clipping_Space:
         near = 1
         far = 100.0
         self.projection_matrix = self.create_perspective_projection_matrix(fov, aspect_ratio, near, far)
-        self.border = 0.9
+        self.border = 1
 
     def create_perspective_projection_matrix(self, fov, aspect_ratio, near, far):
         
@@ -25,86 +25,109 @@ class Clipping_Space:
         ])
 
     def cube_in_space(self, cube_points: list):
-
         full_triangle_list = []
 
-        #for each triangle:
+        planes = [
+            ("left", [-self.border, 0, 0]),
+            ("right", [self.border, 0, 0]),
+            ("bottom", [0, -self.border, 0]),
+            ("top", [0, self.border, 0])
+        ]
+
         for triangle in cube_points:
+            triangles_to_clip = [triangle]
 
-            full_point_list = []
-            inside_point = []
-            outside_point = []
+            for plane_name, plane_position in planes:
+                new_triangles = []
 
-            for point in triangle.camera_points:
-                clip_space_point = np.matmul(self.projection_matrix, point)
-                ndc_point = clip_space_point / clip_space_point[3]
+                for triangle_to_clip in triangles_to_clip:
+                    inside_points = []
+                    outside_points = []
 
-                #check which points are in space
-                if -self.border <= ndc_point[0] <= self.border and -self.border <= ndc_point[1] <= self.border and 1 <= ndc_point[2] <= 100:
-                    inside_point.append(ndc_point)
-                else:
-                    outside_point.append(ndc_point)
+                    for point in triangle_to_clip.camera_points:
+                        clip_space_point = np.matmul(self.projection_matrix, point)
+                        ndc_point = clip_space_point / clip_space_point[3]
 
+                        if self.is_inside_plane(ndc_point, plane_name):
+                            inside_points.append(ndc_point)
+                        else:
+                            outside_points.append(ndc_point)
 
-            #all points inside -> return triangle
-            if len(inside_point) == 3:
-                full_triangle_list.append(triangle)
+                    if len(inside_points) == 3:
+                        new_triangles.append(triangle_to_clip)
 
-            #no points inside -> return none
-            elif len(inside_point) == 0:
-                continue
+                    elif len(inside_points) == 0:
+                        continue
 
-            #one point inside -> two new points
-            elif len(inside_point) == 1:
-                _, new_point1 = self.find_intersection_with_plane(inside_point[0], outside_point[0])
-                _, new_point2 = self.find_intersection_with_plane(inside_point[0], outside_point[1])
+                    elif len(inside_points) == 1:
+                        new_point1 = self.find_intersection_with_plane(inside_points[0], outside_points[0], plane_name)
+                        new_point2 = self.find_intersection_with_plane(inside_points[0], outside_points[1], plane_name)
 
-                full_point_list.append(inside_point[0])
-                full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
-                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
+                        if new_point1 is not None and new_point2 is not None:
+                            new_triangle_points = [
+                                inside_points[0],
+                                np.vstack(new_point1.reshape(-1, 1)),
+                                np.vstack(new_point2.reshape(-1, 1))
+                            ]
 
+                            for pos, point in enumerate(new_triangle_points):
+                                new_triangle_points[pos] = self.transfer_back_camera_space(point)
 
-                for pos, point in enumerate(full_point_list):
+                            new_triangle = copy.deepcopy(triangle_to_clip)
+                            new_triangle.camera_points = new_triangle_points
+                            new_triangles.append(new_triangle)
 
-                    full_point_list[pos] = self.transfer_back_camera_space(point)
-                    triangle.camera_points = full_point_list
+                    elif len(inside_points) == 2:
+                        new_point1 = self.find_intersection_with_plane(inside_points[0], outside_points[0], plane_name)
+                        new_point2 = self.find_intersection_with_plane(inside_points[1], outside_points[0], plane_name)
 
-                full_triangle_list.append(triangle)
+                        if new_point1 is not None:
+                            new_triangle_points1 = [
+                                np.vstack(new_point1.reshape(-1, 1)),
+                                np.vstack(new_point2.reshape(-1, 1)) if new_point2 is not None else inside_points[1],
+                                inside_points[0]
+                            ]
 
-            #two points inside -> two new triangles
-            elif len(inside_point) == 2:
-                _, new_point1 = self.find_intersection_with_plane(inside_point[0], outside_point[0])
-                _, new_point2 = self.find_intersection_with_plane(inside_point[1], outside_point[0])
+                            for pos, point in enumerate(new_triangle_points1):
+                                new_triangle_points1[pos] = self.transfer_back_camera_space(point)
 
-                # First triangle
-                full_point_list = []
-                full_point_list.append(np.vstack([new_point1.reshape(-1, 1), [[1]]]))
-                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
-                full_point_list.append(inside_point[0])
-                
-                for pos, point in enumerate(full_point_list):
-                    full_point_list[pos] = self.transfer_back_camera_space(point)
-                
-                triangle_new1 = copy.deepcopy(triangle)
-                triangle_new1.camera_points = full_point_list
-                full_triangle_list.append(triangle_new1)
-                
-                # Second triangle
-                full_point_list = []
-                full_point_list.append(inside_point[0])
-                full_point_list.append(np.vstack([new_point2.reshape(-1, 1), [[1]]]))
-                full_point_list.append(inside_point[1])
-                
-                for pos, point in enumerate(full_point_list):
-                    full_point_list[pos] = self.transfer_back_camera_space(point)
-                
-                triangle_new2 = copy.deepcopy(triangle)
-                triangle_new2.camera_points = full_point_list
-                full_triangle_list.append(triangle_new2)
+                            triangle_new1 = copy.deepcopy(triangle_to_clip)
+                            triangle_new1.camera_points = new_triangle_points1
+                            new_triangles.append(triangle_new1)
+
+                        if new_point2 is not None:
+                            new_triangle_points2 = [
+                                inside_points[0],
+                                np.vstack(new_point2.reshape(-1, 1)),
+                                inside_points[1]
+                            ]
+
+                            for pos, point in enumerate(new_triangle_points2):
+                                new_triangle_points2[pos] = self.transfer_back_camera_space(point)
+
+                            triangle_new2 = copy.deepcopy(triangle_to_clip)
+                            triangle_new2.camera_points = new_triangle_points2
+                            new_triangles.append(triangle_new2)
+
+                triangles_to_clip = new_triangles
+
+            full_triangle_list.extend(triangles_to_clip)
 
         return full_triangle_list
-    
 
+
+    @staticmethod
+    def is_inside_plane(point, plane_name):
+        if plane_name == "left":
+            return point[0] >= -1
+        elif plane_name == "right":
+            return point[0] <= 1
+        elif plane_name == "bottom":
+            return point[1] >= -1
+        elif plane_name == "top":
+            return point[1] <= 1
+        return False
+    
     @staticmethod
     def intersection_with_plane_x(A, B, x):
         if A[0] == B[0]:
@@ -125,44 +148,19 @@ class Clipping_Space:
             return intersection
         return None
 
-    def find_intersection_with_plane(self, point1, point2):
+    def find_intersection_with_plane(self, point1, point2, plane_name):
+        if plane_name == "left":
+            return self.intersection_with_plane_x(point1, point2, -self.border)
+        elif plane_name == "right":
+            return self.intersection_with_plane_x(point1, point2, self.border)
+        elif plane_name == "bottom":
+            return self.intersection_with_plane_y(point1, point2, -self.border)
+        elif plane_name == "top":
+            return self.intersection_with_plane_y(point1, point2, self.border)
+        return None
 
-        planes_x = [-self.border, self.border]
-        planes_y = [-self.border, self.border]
 
-        A = point1.flatten()
-        A = A[:3]
-        B = point2.flatten()
-        B = B[:3]
-
-        #get intersections with borders
-        intersections = {
-            "left": self.intersection_with_plane_x(A, B, planes_x[0]),
-            "right": self.intersection_with_plane_x(A, B, planes_x[1]),
-            "bottom": self.intersection_with_plane_y(A, B, planes_y[0]),
-            "top": self.intersection_with_plane_y(A, B, planes_y[1])
-        }
-
-        #delete points with "None"
-        valid_intersections = {}
-        for plane, point in intersections.items():
-            if point is not None:
-                valid_intersections[plane] = point
-
-        if not valid_intersections:
-            return None, None
-
-        #get closest border
-        closest_intersection = min(valid_intersections, key=lambda k: np.linalg.norm(valid_intersections[k] - A))
-
-        return closest_intersection, valid_intersections[closest_intersection]
-    
-    
     def transfer_back_camera_space(self, point):
-        # Invert the projection transformation
         converted_point = np.matmul(np.linalg.inv(self.projection_matrix), point)
-        converted_point /= converted_point[3]  # Normalize by w to get back the original point
-        #print("Back to Homogeneous Point:", final)
-
+        converted_point /= converted_point[3]
         return converted_point
-

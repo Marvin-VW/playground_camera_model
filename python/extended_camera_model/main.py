@@ -43,16 +43,13 @@ class Engine:
         #self.render_list.extend(struc)
 
 
-        self.render_list.extend(Structure_Generator.tree())
+        #self.render_list.extend(Structure_Generator.tree())
         
-        # cube = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
-        # self.render_list.extend(cube)
+        cube = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
+        self.mesh_list.extend(cube.mesh)
 
-        for cube in self.render_list:
-            print(cube)
-            self.mesh_list.extend(cube.mesh)
-
-        print(self.mesh_list)
+        # for cube in self.render_list:
+        #     self.mesh_list.extend(cube.mesh)
 
         while True:
 
@@ -76,14 +73,14 @@ class Engine:
 
                 if self.is_triangle_facing_camera(triangle.normal, triangle.centroids, camera_vector_world):
 
-                    light_direction = (1,0,0) # front
+                    light_direction = (1,0,0)
                     triangle.ilm = Color.intensity(light_direction, triangle.normal)
+                    print(triangle.ilm)
                     triangle.color = Color.adjust_bgr_intensity(Color.ALICE_BLUE, triangle.ilm)
 
                     triangle.camera_points = self.camera_model.world_transform(triangle.world_points, self.C_T_V)
                     visiable_triangles.append(triangle)
 
-            #sort triangles by z
             sorted_list = sorted(visiable_triangles, key=lambda triangle: triangle.centroids[2], reverse=True)
 
             clipped_triangles = []

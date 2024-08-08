@@ -30,7 +30,7 @@ class Window:
         self.last_mouse_position = (0, 0)
 
         self.last_update_time = time.time()
-        self.update_interval = 0
+        self.update_interval = 0.05
         
         self.show_normals = False
         self.show_planes = False
