@@ -9,6 +9,7 @@ class Triangle4D:
         self.normal = None
         self.ilm = None
         self.color = None
+        self.centroids = None
 
 class Cube:
     

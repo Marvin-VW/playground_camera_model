@@ -56,26 +56,4 @@ class CalculateNormal:
         normal_start = np.vstack([normal_start.reshape(-1, 1), [[1]]])
         normal_end = np.vstack([normal_end.reshape(-1, 1), [[1]]])
 
-        return scaled_normal, normal_start, normal_end
-    
-
-    @staticmethod
-    def get_camera_vector(window):
-        x = (window.get_camera_system_translation_x() - 10000) / 1000.0
-        y = (window.get_camera_system_translation_z() - 10000) / 1000.0
-        z = (window.get_camera_system_translation_y() - 10000) / 1000.0
-
-        pitch_rad = CalculateNormal.DEG_TO_RAD(window.get_camera_system_rotation_pitch() / 10.0)
-        yaw_rad = CalculateNormal.DEG_TO_RAD(window.get_camera_system_rotation_yaw() / 10.0)
-
-        vx = math.cos(yaw_rad) * math.cos(pitch_rad)
-        vy = math.sin(yaw_rad) * math.cos(pitch_rad)
-        vz = math.sin(pitch_rad)
-        
-        final_vector_x = vx
-        final_vector_y = vy + 1
-        final_vector_z = vz
-
-        final_vector = (final_vector_x, final_vector_y, final_vector_z)
-
-        return final_vector
+        return scaled_normal, normal_start, normal_end, centroid

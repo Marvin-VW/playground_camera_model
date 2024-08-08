@@ -47,27 +47,29 @@ class Engine:
 
         while True:
 
-            #self.window.handle_movement()
+            self.window.handle_movement()
             self.fps_counter.update()
             self.camera_model.reset_camera_image()
 
             self.V_T_C, self.C_T_V, self.V_T_Cube = Matrix_Functions.homogeneous_transformation(self.window)
-            camera_vector_world = CalculateNormal.get_camera_vector(self.window)
+            camera_vector_world = self.camera_model.get_camera_vectors(self.V_T_C)
+
+            print(camera_vector_world)
 
             visiable_triangles = []
 
             for triangle in self.render_list:
 
                 triangle.world_points = self.camera_model.world_transform(triangle.points, self.V_T_Cube)
-                triangle.normal, normal_start, normal_end = CalculateNormal.normal(triangle.world_points)
+                triangle.normal, normal_start, normal_end, triangle.centroids = CalculateNormal.normal(triangle.world_points)
                 transformed_normals = self.camera_model.camera_transform([normal_start, normal_end], self.C_T_V)
 
                 if self.window.show_normals:
                     self.camera_model.draw_camera_image_arrow(transformed_normals[0], transformed_normals[1])
 
-                if self.is_triangle_facing_camera(triangle.normal, triangle.world_points[0].flatten()[:3], camera_vector_world):
+                if self.is_triangle_facing_camera(triangle.normal, triangle.centroids, camera_vector_world):
 
-                    light_direction = camera_vector_world
+                    light_direction = (1,0,0) # front
                     triangle.ilm = Color.intensity(light_direction, triangle.normal)
                     triangle.color = Color.adjust_bgr_intensity(Color.ALICE_BLUE, triangle.ilm)
 
@@ -75,7 +77,7 @@ class Engine:
                     visiable_triangles.append(triangle)
 
             #sort triangles by z
-            sorted_list = sorted(visiable_triangles, key=lambda triangle: triangle.camera_points[0][2], reverse=True)
+            sorted_list = sorted(visiable_triangles, key=lambda triangle: triangle.centroids[2], reverse=True)
 
             clipped_triangles = []
             clipped_triangles.extend(self.clipping_space.cube_in_space(sorted_list))

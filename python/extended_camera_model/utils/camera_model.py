@@ -130,3 +130,14 @@ class CameraModel:
 
     def reset_camera_image(self) -> None:
         self.camera_image.fill(255)
+
+
+    @staticmethod
+    def get_camera_vectors(V_T_C: np.array) -> np.array:
+        rotation_matrix = V_T_C[:3, :3]
+        forward_vector = -rotation_matrix[:, 2]
+        camera_position = V_T_C[:3, 3]
+        final_vector_x = forward_vector[0] + camera_position[0]
+        final_vector_y = forward_vector[1] + camera_position[1]
+        final_vector_z = forward_vector[2] + camera_position[2]
+        return (final_vector_x, final_vector_y, final_vector_z)

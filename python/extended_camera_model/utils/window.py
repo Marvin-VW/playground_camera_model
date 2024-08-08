@@ -26,10 +26,11 @@ class Window:
         self.cube_window_name = "cube settings"
 
         self.mouse_is_pressed = False
+        self.right_button_mode = False
         self.last_mouse_position = (0, 0)
 
         self.last_update_time = time.time()
-        self.update_interval = 0.1
+        self.update_interval = 0
         
         self.show_normals = False
         self.show_planes = False
@@ -151,24 +152,58 @@ class Window:
                 
                 key = cv.waitKey(30) & 0xFF
             
-                if key == ord('w'):
-                    self.camera_system_translation_x += camera_speed
-                    cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
-                if key == ord('s'):
-                    self.camera_system_translation_x -= camera_speed
-                    cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
-                if key == ord('a'):
-                    self.camera_system_translation_y += camera_speed
-                    cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
                 if key == ord('d'):
-                    self.camera_system_translation_y -= camera_speed
-                    cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+                    self.move_camera('forward', camera_speed)
+                if key == ord('a'):
+                    self.move_camera('backward', camera_speed)
+                if key == ord('w'):
+                    self.move_camera('left', camera_speed)
+                if key == ord('s'):
+                    self.move_camera('right', camera_speed)
                 if key == ord('q'):
-                    self.camera_system_translation_z -= camera_speed
-                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
+                    self.move_camera('down', camera_speed)
                 if key == ord('e'):
-                    self.camera_system_translation_z += camera_speed
-                    cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
+                    self.move_camera('up', camera_speed)
+
+    def move_camera(self, direction, speed):
+        # Calculate vectors
+        yaw = np.deg2rad(self.camera_system_rotation_yaw / 10.0)
+        pitch = np.deg2rad(self.camera_system_rotation_pitch / 10.0)
+
+        forward_x = np.cos(pitch) * np.cos(yaw)
+        forward_y = np.cos(pitch) * np.sin(yaw)
+        forward_z = np.sin(pitch)
+
+        right_x = np.sin(yaw)
+        right_y = -np.cos(yaw)
+        right_z = 0
+
+        up_x = 0
+        up_y = 0
+        up_z = 1
+
+        if direction == 'forward':
+            self.camera_system_translation_x += int(forward_x * speed)
+            self.camera_system_translation_y += int(forward_y * speed)
+            self.camera_system_translation_z += int(forward_z * speed)
+        elif direction == 'backward':
+            self.camera_system_translation_x -= int(forward_x * speed)
+            self.camera_system_translation_y -= int(forward_y * speed)
+            self.camera_system_translation_z -= int(forward_z * speed)
+        elif direction == 'left':
+            self.camera_system_translation_x -= int(right_x * speed)
+            self.camera_system_translation_y -= int(right_y * speed)
+        elif direction == 'right':
+            self.camera_system_translation_x += int(right_x * speed)
+            self.camera_system_translation_y += int(right_y * speed)
+        elif direction == 'up':
+            self.camera_system_translation_z += int(up_z * speed)
+        elif direction == 'down':
+            self.camera_system_translation_z -= int(up_z * speed)
+
+        cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
+        cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
+        cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
 
     def mouse_event_handler(self, event, x, y, flags, param):
         if event == cv.EVENT_LBUTTONDOWN:
@@ -176,8 +211,13 @@ class Window:
             self.last_mouse_position = (x, y)
         elif event == cv.EVENT_LBUTTONUP:
             self.mouse_is_pressed = False
+        elif event == cv.EVENT_RBUTTONDOWN:
+            self.right_button_mode = True
+        elif event == cv.EVENT_RBUTTONDBLCLK:
+            self.right_button_mode = False
+            self.last_mouse_position = (x, y)
         elif event == cv.EVENT_MOUSEMOVE:
-            if self.mouse_is_pressed:
+            if self.mouse_is_pressed or self.right_button_mode:
                 dx = x - self.last_mouse_position[0]
                 dy = y - self.last_mouse_position[1]
                 self.camera_system_rotation_yaw += dx
@@ -187,3 +227,4 @@ class Window:
                 cv.setTrackbarPos("Yaw", self.camera_window_name, self.camera_system_rotation_yaw)
                 cv.setTrackbarPos("Roll", self.camera_window_name, self.camera_system_rotation_roll)
                 self.last_mouse_position = (x, y)
+                
