@@ -36,7 +36,7 @@ class Engine:
         return dot_product < 0.0
 
     def main(self):
-
+        
         # file_path = r"utils\resources\VideoShip.obj"
         # struc = Structure_Generator.load_from_obj(file_path)
         # self.render_list.extend(struc)
@@ -47,7 +47,7 @@ class Engine:
 
         while True:
 
-            #self.window.handle_movement()
+            self.window.handle_movement()
             self.fps_counter.update()
             self.camera_model.reset_camera_image()
 

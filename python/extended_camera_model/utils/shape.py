@@ -50,7 +50,7 @@ class Cube:
 
         triangle_left_1 = Triangle4D(self.Cube_cubeP3, self.Cube_cubeP0, self.Cube_cubeP7)
         triangle_left_2 = Triangle4D(self.Cube_cubeP7, self.Cube_cubeP0, self.Cube_cubeP4)
-
+        
         triangle_right_1 = Triangle4D(self.Cube_cubeP5, self.Cube_cubeP1, self.Cube_cubeP6)
         triangle_right_2 = Triangle4D(self.Cube_cubeP6, self.Cube_cubeP1, self.Cube_cubeP2)
 
