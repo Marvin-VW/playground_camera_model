@@ -36,7 +36,7 @@ class CalculateNormal:
         # normalize to unit length
         norm = np.linalg.norm(normal_vector)
         if norm == 0:
-            raise ValueError("The points do not form a valid triangle.")
+            norm = 0.5
         
         normalized_normal = normal_vector / norm
         

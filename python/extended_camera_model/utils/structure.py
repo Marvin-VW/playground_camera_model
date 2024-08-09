@@ -1,34 +1,7 @@
-from utils.shape import Cube, Rectangle ,Triangle4D
+from utils.shape import Triangle4D
 import numpy as np
 
-class Structure_Generator:
-
-    @staticmethod
-    def ground(width, height, depth, size=1, start_x=0, start_y=0, start_z=0):
-        """
-        Generate a ground structure of cubes with the specified width, height, and depth.
-        """
-        cubes = []
-
-        for z in range(height):
-            for row in range(width):
-                for col in range(depth):
-                    pos_x = start_x + col * size*2
-                    pos_y = start_y + row * size*2
-                    pos_z = start_z + z * size*2
-                    cub = Cube(size, pos_x, pos_y, pos_z)
-                    cubes.append(cub)
-
-        return cubes
-    
-    @staticmethod
-    def tree(size=0.5, start_x=0, start_y=0, start_z=0): 
-        cubes = []
-        
-        rec = Rectangle(1, 1, 3, 0, 0, 0)
-        cubes.append(rec)
-
-        return cubes
+class OBJ_Importer:
 
     @staticmethod  
     def create_point(x: float, y: float, z: float) -> np.array:
@@ -49,7 +22,7 @@ class Structure_Generator:
                 for line in f:
                     if line.startswith('v '):
                         parts = line.strip().split()
-                        v = Structure_Generator.create_point(float(parts[1]), float(parts[2]), float(parts[3]))
+                        v = OBJ_Importer.create_point(float(parts[1]), float(parts[2]), float(parts[3]))
                         verts.append(v)
 
                     if line.startswith('f '):

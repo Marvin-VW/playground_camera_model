@@ -155,7 +155,7 @@ class Color:
     def intensity(light_direction, normal):
         norm = np.linalg.norm(light_direction)
         normalized_light_direction = light_direction / norm
-        intensity = abs(np.dot(normalized_light_direction, normal))
+        intensity = np.dot(normalized_light_direction, normal) * (-1)
         return intensity
     
     @staticmethod

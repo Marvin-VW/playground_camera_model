@@ -6,7 +6,7 @@ from utils.camera_model import CameraModel
 from utils.matrix_functions import Matrix_Functions
 from utils.window import Window
 from utils.shape import Cube
-from utils.structure import Structure_Generator
+from utils.structure import OBJ_Importer
 from utils.color import Color
 from utils.clipping_space import Clipping_Space
 from utils.fps_counter import FpsCounter
@@ -34,22 +34,17 @@ class Engine:
         dot_product = ( normal[0] * (tri[0] - cam[0]) +
                         normal[1] * (tri[1] - cam[1]) +
                         normal[2] * (tri[2] - cam[2])   )
-        return dot_product < 0.0
+        return dot_product
 
     def main(self):
 
         # file_path = r"utils\resources\VideoShip.obj"
-        #struc = Structure_Generator.load_from_obj(file_path)
-        #self.render_list.extend(struc)
+        # struc = Structure_Generator.load_from_obj(file_path)
+        # self.mesh_list.extend(struc)
 
-
-        #self.render_list.extend(Structure_Generator.tree())
-        
         cube = Cube(size=1, pos_x=0, pos_y=0, pos_z=0)
         self.mesh_list.extend(cube.mesh)
 
-        # for cube in self.render_list:
-        #     self.mesh_list.extend(cube.mesh)
 
         while True:
 
@@ -71,7 +66,7 @@ class Engine:
                 if self.window.show_normals:
                     self.camera_model.draw_camera_image_arrow(transformed_normals[0], transformed_normals[1])
 
-                if self.is_triangle_facing_camera(triangle.normal, triangle.centroids, camera_vector_world):
+                if self.is_triangle_facing_camera(triangle.normal, triangle.centroids, camera_vector_world) < 0.0:
 
                     light_direction = (1,0,0)
                     triangle.ilm = Color.intensity(light_direction, triangle.normal)
