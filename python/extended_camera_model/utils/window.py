@@ -200,7 +200,10 @@ class Window:
             self.camera_system_translation_z += int(up_z * speed)
         elif direction == 'down':
             self.camera_system_translation_z -= int(up_z * speed)
-
+            
+        self.camera_system_translation_x = np.clip(self.camera_system_translation_x, 0, 20000)
+        self.camera_system_translation_y = np.clip(self.camera_system_translation_y, 0, 20000)
+        self.camera_system_translation_z = np.clip(self.camera_system_translation_z, 0, 20000)
         cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
         cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
         cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
