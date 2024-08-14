@@ -57,3 +57,39 @@ class CalculateNormal:
         normal_end = np.vstack([normal_end.reshape(-1, 1), [[1]]])
 
         return scaled_normal, normal_start, normal_end, centroid
+    
+    @staticmethod
+    def get_shadow(triangles, light_vec):
+
+        shadow_points = []
+        plane_normal = np.array([0, 0, 1])
+
+        for triangle in triangles:
+            for point in triangle.world_points:
+                shadow_points.append(CalculateNormal.find_intersection(plane_normal, point[:3].flatten(), light_vec))
+
+        unique_array = list(map(np.array, set(tuple(arr) for arr in shadow_points)))
+        shadow_points = []
+
+        for point in unique_array:
+            shadow_points.append(np.vstack([point.reshape(-1, 1), [[1]]]))
+
+        return shadow_points
+
+    @staticmethod
+    def find_intersection(plane_normal, line_point, line_dir, plane_d=2):
+
+        a, b, c = plane_normal
+        x0, y0, z0 = line_point
+        vx, vy, vz = line_dir
+        
+        denominator = a * vx + b * vy + c * vz
+        
+        if denominator == 0:
+            return None
+        
+        t = -(a * x0 + b * y0 + c * z0 + plane_d) / denominator
+        
+        intersection_point = np.array([x0 + t * vx, y0 + t * vy, z0 + t * vz])
+        
+        return intersection_point
