@@ -19,7 +19,7 @@ class Window:
         self.cube_system_translation_z = 10000
         self.cube_system_rotation_roll = 0
         self.cube_system_rotation_pitch = 0
-        self.cube_system_rotation_yaw = 0
+        self.cube_system_rotation_yaw = 300
         self.cube_system_scale = 1
 
         self.camera_window_name = "camera settings"
@@ -200,7 +200,10 @@ class Window:
             self.camera_system_translation_z += int(up_z * speed)
         elif direction == 'down':
             self.camera_system_translation_z -= int(up_z * speed)
-
+            
+        self.camera_system_translation_x = np.clip(self.camera_system_translation_x, 0, 20000)
+        self.camera_system_translation_y = np.clip(self.camera_system_translation_y, 0, 20000)
+        self.camera_system_translation_z = np.clip(self.camera_system_translation_z, 0, 20000)
         cv.setTrackbarPos("X", self.camera_window_name, self.camera_system_translation_x)
         cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
         cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
@@ -222,8 +225,16 @@ class Window:
                 dy = y - self.last_mouse_position[1]
                 self.camera_system_rotation_yaw += dx
                 self.camera_system_rotation_roll += dy 
-                self.camera_system_rotation_yaw = np.clip(self.camera_system_rotation_yaw, 0, 3600)
-                self.camera_system_rotation_roll = np.clip(self.camera_system_rotation_roll, 0, 3600)
+                if self.camera_system_rotation_yaw > 3600:
+                    self.camera_system_rotation_yaw -= 3599
+                if self.camera_system_rotation_roll > 3600:
+                    self.camera_system_rotation_roll -= 3599
+                if self.camera_system_rotation_yaw < 0:
+                    self.camera_system_rotation_yaw += 3599
+                if self.camera_system_rotation_roll < 0:
+                    self.camera_system_rotation_roll += 3599
+                #self.camera_system_rotation_yaw = np.clip(self.camera_system_rotation_yaw, 0, 3600)
+                #self.camera_system_rotation_roll = np.clip(self.camera_system_rotation_roll, 0, 3600)
                 cv.setTrackbarPos("Yaw", self.camera_window_name, self.camera_system_rotation_yaw)
                 cv.setTrackbarPos("Roll", self.camera_window_name, self.camera_system_rotation_roll)
                 self.last_mouse_position = (x, y)
