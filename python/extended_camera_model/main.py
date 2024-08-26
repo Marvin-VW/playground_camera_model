@@ -68,15 +68,21 @@ class Engine:
 
                 if self.is_triangle_facing_camera(triangle.normal, triangle.centroids, camera_vector_world) < 0.0:
 
-                    light_direction = (1,0,0)
+                    light_direction = (1, -0.5, -0.8)
                     triangle.ilm = Color.intensity(light_direction, triangle.normal)
-                    print(triangle.ilm)
                     triangle.color = Color.adjust_bgr_intensity(Color.ALICE_BLUE, triangle.ilm)
 
                     triangle.camera_points = self.camera_model.world_transform(triangle.world_points, self.C_T_V)
                     visiable_triangles.append(triangle)
 
             sorted_list = sorted(visiable_triangles, key=lambda triangle: triangle.centroids[2], reverse=True)
+
+            shadow_points = CalculateNormal.get_shadow(sorted_list, light_direction)
+            shadow_points_camera = self.camera_model.world_transform(shadow_points, self.C_T_V)
+            self.camera_model.draw_poly(shadow_points_camera)
+
+            print(shadow_points_camera)
+
 
             clipped_triangles = []
             clipped_triangles.extend(self.clipping_space.cube_in_space(sorted_list))

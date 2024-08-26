@@ -127,6 +127,23 @@ class CameraModel:
             Poly_Points = np.array(I_points, np.int32)
             cv.fillPoly(self.camera_image, [Poly_Points], triangle.color)
 
+    def draw_poly(self, points):
+
+        I_points = []
+
+        for point in points:
+
+            I_point = np.matmul(self.I_T_C, point)
+                
+            u = int(I_point[0] / I_point[2])
+            v = int(I_point[1] / I_point[2])
+
+            I_points.append((u, v))
+            
+        Poly_Points = np.array(I_points, np.int32)
+        hull = cv.convexHull(Poly_Points)
+        cv.fillPoly(self.camera_image, [hull], (50,50,50))
+
 
     def reset_camera_image(self) -> None:
         self.camera_image.fill(255)
