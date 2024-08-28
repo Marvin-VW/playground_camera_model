@@ -2,7 +2,8 @@
 import cv2 as cv
 import numpy as np
 import time
-
+import ctypes
+import pygame
 
 class Window:
 
@@ -36,6 +37,7 @@ class Window:
         self.show_planes = False
         self.show_points = False
 
+        self.user32 = ctypes.WinDLL('user32', use_last_error=True)
         self.window_creator()
     
     def window_creator(self):
@@ -208,6 +210,14 @@ class Window:
         cv.setTrackbarPos("Y", self.camera_window_name, self.camera_system_translation_y)
         cv.setTrackbarPos("Z", self.camera_window_name, self.camera_system_translation_z)
 
+    def hide_cursor(self):
+        self.user32.ShowCursor(False)
+    def show_cursor(self):
+        result = self.user32.ShowCursor(True)
+        while result < 0:
+            result = self.user32.ShowCursor(True)
+        return result
+
     def mouse_event_handler(self, event, x, y, flags, param):
         if event == cv.EVENT_LBUTTONDOWN:
             self.mouse_is_pressed = True
@@ -216,7 +226,10 @@ class Window:
             self.mouse_is_pressed = False
         elif event == cv.EVENT_RBUTTONDOWN:
             self.right_button_mode = True
+            self.last_mouse_position = (x, y)
+            self.hide_cursor()
         elif event == cv.EVENT_RBUTTONDBLCLK:
+            self.show_cursor()
             self.right_button_mode = False
             self.last_mouse_position = (x, y)
         elif event == cv.EVENT_MOUSEMOVE:

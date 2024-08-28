@@ -81,7 +81,7 @@ class Engine:
             shadow_points_camera = self.camera_model.world_transform(shadow_points, self.C_T_V)
             self.camera_model.draw_poly(shadow_points_camera)
 
-            print(shadow_points_camera)
+            #(shadow_points_camera)
 
 
             clipped_triangles = []
