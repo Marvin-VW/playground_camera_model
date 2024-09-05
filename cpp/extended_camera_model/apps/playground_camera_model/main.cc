@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 	cv::Mat C_cubeP6(4, 1, CV_64F);
 	cv::Mat C_cubeP7(4, 1, CV_64F);
 
-	// Create gui
+	// Create gui lol
 	Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                           &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
                                           
