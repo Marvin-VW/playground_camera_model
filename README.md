@@ -27,17 +27,74 @@ For a Debian/Ubuntu system, run the following command to install the dependencie
 
 GoogleTest is pulled in as a git submodule to avoid problems with missing cmake files in sub distributions.
 
-## Usage
+## Cloning the Repository
 
-Clone, prepare and build with the following steps:
+To clone the repository and initialize the submodules, execute the following commands:
 
-	git clone git@github.com:twyleg/playground_camera_model.git
-	cd playground_camera_model
+```bash
+git clone git@github.com:twyleg/playground_camera_model.git
+cd playground_camera_model
+git submodule update --init
+```
 
-	git submodule update --init
-	
-	mkdir build/
-	cd build/
-	cmake ../
-	make
+## Building the Project
 
+The project contains two models: a basic camera model and an extended camera model. Follow the respective instructions to build the desired model.
+
+### Basic Camera Model
+
+To build the basic camera model, perform the following steps:
+
+1. Navigate to the basic camera model directory:
+
+    ```bash
+    cd cpp/basic_camera_model
+    ```
+
+2. Create a build directory and navigate into it:
+
+    ```bash
+    mkdir build
+    cd build
+    ```
+
+3. Generate the build files with CMake:
+
+    ```bash
+    cmake ../
+    ```
+
+4. Compile the project:
+
+    ```bash
+    make
+    ```
+
+### Extended Camera Model
+
+To build the extended camera model, follow these steps:
+
+1. Navigate to the extended camera model directory:
+
+    ```bash
+    cd cpp/extended_camera_model
+    ```
+
+2. Create a build directory and navigate into it:
+
+    ```bash
+    mkdir build
+    cd build
+    ```
+
+3. Generate the build files with CMake:
+
+    ```bash
+    cmake ../
+    ```
+
+4. Compile the project:
+
+    ```bash
+    make
+    ```

@@ -1,3 +1,16 @@
-[submodule "external/googletest"]
-	path = external/googletest
+[submodule "basic_camera_model/external/googletest"]
+	path = basic_camera_model/external/googletest
+	url = https://github.com/google/googletest.git
+	
+[submodule "extended_camera_module/external/googletest"]
+	path = extended_camera_module/external/googletest
+	url = https://github.com/google/googletest.git
+[submodule "cpp/basic_camera_model/build/cpp/extended_camera_model/external/googletest"]
+	path = cpp/basic_camera_model/build/cpp/extended_camera_model/external/googletest
+	url = https://github.com/google/googletest.git
+[submodule "cpp/extended_camera_model/external/googletest"]
+	path = cpp/extended_camera_model/external/googletest
+	url = https://github.com/google/googletest.git
+[submodule "cpp/basic_camera_model/external/googletest"]
+	path = cpp/basic_camera_model/external/googletest
 	url = https://github.com/google/googletest.git

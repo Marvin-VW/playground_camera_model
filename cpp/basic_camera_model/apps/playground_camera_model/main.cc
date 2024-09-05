@@ -33,7 +33,7 @@ int main(int argc, char** argv){
 
 
 	// Init camera model
-	playground_camera_model::CameraModel cameraModel(0.00452, 0.00288, 0.004, 640, 480, 320, 240);
+	playground_camera_model::CameraModel cameraModel(0.00452, 0.00254, 0.004, 1280, 720, 1280/2, 720/2);
 
 	// Init homogeneous transformation matrices
 	cv::Mat W_T_V 		= HTM::createHomogeneousTransformationMatrix(0,0,0, 0,0,0);
