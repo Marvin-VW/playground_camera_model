@@ -21,6 +21,8 @@ add_library(${TARGET_NAME}
     camera_model.h
     homogeneous_transformation_matrix.cc
     homogeneous_transformation_matrix.h
+    window.cpp
+    window.h
 )
 
 
