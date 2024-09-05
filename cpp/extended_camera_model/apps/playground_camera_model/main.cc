@@ -7,6 +7,7 @@
 
 #include <playground_camera_model/core/camera_model.h>
 #include <playground_camera_model/core/homogeneous_transformation_matrix.h>
+#include <playground_camera_model/core/window.h>
 
 #define DEG_TO_RAD(x) (x*(M_PI/180.0))
 
@@ -74,23 +75,11 @@ int main(int argc, char** argv){
 	cv::Mat C_cubeP7(4, 1, CV_64F);
 
 	// Create gui
-	cv::namedWindow("image window", cv::WINDOW_AUTOSIZE);
-	cv::namedWindow("camera settings", cv::WINDOW_AUTOSIZE);
-	cv::namedWindow("cube settings", cv::WINDOW_AUTOSIZE);
-
-	cv::createTrackbar("X", "camera settings", &cameraSystemTranslationX, 20000);
-	cv::createTrackbar("Y", "camera settings", &cameraSystemTranslationY, 20000);
-	cv::createTrackbar("Z", "camera settings", &cameraSystemTranslationZ, 20000);
-	cv::createTrackbar("Roll", "camera settings", &cameraSystemRotationRoll, 3600);
-	cv::createTrackbar("Pitch", "camera settings", &cameraSystemRotationPitch, 3600);
-	cv::createTrackbar("Yaw", "camera settings", &cameraSystemRotationYaw, 3600);
-
-	cv::createTrackbar("X", "cube settings", &cubeSystemTranslationX, 20000);
-	cv::createTrackbar("Y", "cube settings", &cubeSystemTranslationY, 20000);
-	cv::createTrackbar("Z", "cube settings", &cubeSystemTranslationZ, 20000);
-	cv::createTrackbar("Roll", "cube settings", &cubeSystemRotationRoll, 3600);
-	cv::createTrackbar("Pitch", "cube settings", &cubeSystemRotationPitch, 3600);
-	cv::createTrackbar("Yaw", "cube settings", &cubeSystemRotationYaw, 3600);
+	Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+                                          &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
+                                          
+    	Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
+                                        &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw);
 
 
 	while(true){
