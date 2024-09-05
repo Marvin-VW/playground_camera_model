@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 	Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                           &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
                                           
-    	Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
+    Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
                                         &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw);
 
 
