@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Daniel-VW
 #include "window.h"
 
 void Window::createCameraSettingsWindow(int32_t* cameraSystemTranslationX, int32_t* cameraSystemTranslationY, int32_t* cameraSystemTranslationZ,

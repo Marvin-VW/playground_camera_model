@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Daniel-VW
 #ifndef WINDOW_H
 #define WINDOW_H
 

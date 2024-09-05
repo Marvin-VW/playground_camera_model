@@ -23,6 +23,8 @@ add_library(${TARGET_NAME}
     homogeneous_transformation_matrix.h
     window.cpp
     window.h
+    fps_counter.cpp
+    fps_counter.h
 )
 
 

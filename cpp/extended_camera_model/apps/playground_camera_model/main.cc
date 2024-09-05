@@ -1,4 +1,4 @@
-// Copyright (C) 2024 twyleg
+// Copyright (C) 2024 twyleg, Daniel-VW
 #include <unistd.h>
 #include <iostream>
 
@@ -8,6 +8,7 @@
 #include <playground_camera_model/core/camera_model.h>
 #include <playground_camera_model/core/homogeneous_transformation_matrix.h>
 #include <playground_camera_model/core/window.h>
+#include <playground_camera_model/core/fps_counter.h>
 
 #define DEG_TO_RAD(x) (x*(M_PI/180.0))
 
@@ -15,6 +16,8 @@
 namespace HTM = playground_camera_model::homogeneous_transformation_matrix;
 
 int main(int argc, char** argv){
+
+	FpsCounter fps_counter(5);
 
 	int32_t cameraSystemTranslationX = 10000;
 	int32_t cameraSystemTranslationY = 10000;
@@ -74,7 +77,7 @@ int main(int argc, char** argv){
 	cv::Mat C_cubeP6(4, 1, CV_64F);
 	cv::Mat C_cubeP7(4, 1, CV_64F);
 
-	// Create gui lol
+	// Create gui
 	Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                           &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
                                           
@@ -143,10 +146,15 @@ int main(int argc, char** argv){
 		cameraModel.drawCameraImageLine(C_cubeP2, C_cubeP6);
 		cameraModel.drawCameraImageLine(C_cubeP3, C_cubeP7);
 
-		cv::imshow("image window", cameraModel.getCameraImage());
+        cv::Mat image = cameraModel.getCameraImage();
+        fps_counter.update();
+        std::string fps_text = "FPS: " + std::to_string(static_cast<int>(fps_counter.get_fps_filtered()));
+        cv::putText(image, fps_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
 
-		// Wait for a short while
-		cv::waitKey(10);
+        cv::imshow("image window", image);
+
+        // Wait for a short while
+        cv::waitKey(10);
 	}
 
 
