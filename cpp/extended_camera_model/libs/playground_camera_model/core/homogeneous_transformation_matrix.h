@@ -11,7 +11,8 @@ cv::Mat createHomogeneousTransformationMatrix(
 		double translationZ,
 		double rotationRoll,
 		double rotationPitch,
-		double rotationYaw);
+		double rotationYaw,
+		int scale);
 
 
 cv::Mat createPoint(double x, double y, double z);

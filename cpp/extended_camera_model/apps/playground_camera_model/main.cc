@@ -35,15 +35,15 @@ int main(int argc, char** argv){
 	int32_t cubeSystemRotationPitch = 0;
 	int32_t cubeSystemRotationYaw =   0;
 
-
+	int32_t cubeSystemScale = 1;
 	// Init camera model
 	playground_camera_model::CameraModel cameraModel(0.00452, 0.00254, 0.004, 1280, 720, 1280/2, 720/2);
 
 	// Init homogeneous transformation matrices
-	cv::Mat W_T_V 		= HTM::createHomogeneousTransformationMatrix(0,0,0, 0,0,0);
-	cv::Mat V_T_C 		= HTM::createHomogeneousTransformationMatrix(0,0,0, 0,0,0);
+	cv::Mat W_T_V 		= HTM::createHomogeneousTransformationMatrix(0,0,0, 0,0,0,1);
+	cv::Mat V_T_C 		= HTM::createHomogeneousTransformationMatrix(0,0,0, 0,0,0,1);
 	cv::Mat C_T_V 		= V_T_C.inv();
-	cv::Mat V_T_Cube 	= HTM::createHomogeneousTransformationMatrix(2,0,1, 0,0,0);
+	cv::Mat V_T_Cube 	= HTM::createHomogeneousTransformationMatrix(2,0,1, 0,0,0,1);
 
 
 	// Init points of cube
@@ -82,7 +82,7 @@ int main(int argc, char** argv){
                                           &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
                                           
     Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
-                                        &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw);
+                                        &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale);
 
 
 	while(true){
@@ -94,7 +94,8 @@ int main(int argc, char** argv){
 				(cameraSystemTranslationZ-10000)/1000.0,
 				DEG_TO_RAD(cameraSystemRotationRoll/10.0),
 				DEG_TO_RAD(cameraSystemRotationPitch/10.0),
-				DEG_TO_RAD(cameraSystemRotationYaw/10.0));
+				DEG_TO_RAD(cameraSystemRotationYaw/10.0),
+				cubeSystemScale);
 
 		C_T_V = V_T_C.inv();
 
@@ -104,7 +105,8 @@ int main(int argc, char** argv){
 				(cubeSystemTranslationZ-10000)/1000.0,
 				DEG_TO_RAD(cubeSystemRotationRoll/10.0),
 				DEG_TO_RAD(cubeSystemRotationPitch/10.0),
-				DEG_TO_RAD(cubeSystemRotationYaw/10.0));
+				DEG_TO_RAD(cubeSystemRotationYaw/10.0),
+				cubeSystemScale);
 
 		// Transform and draw cube points and lines on image
 		C_cubeP0 = C_T_V * V_T_Cube * Cube_cubeP0;

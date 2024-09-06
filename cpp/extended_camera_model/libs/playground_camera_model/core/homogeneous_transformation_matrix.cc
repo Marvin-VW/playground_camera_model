@@ -11,7 +11,8 @@ cv::Mat createHomogeneousTransformationMatrix(
 		double translationZ,
 		double rotationRoll,
 		double rotationPitch,
-		double rotationYaw){
+		double rotationYaw,
+		int scale){
 
 
 	double rotationMatrixRollData[4*4] =  {	1,	0,					0,					0,
@@ -33,13 +34,28 @@ cv::Mat createHomogeneousTransformationMatrix(
 											0,	1,	0,	translationY,
 											0,	0,	1,	translationZ,
 											0,	0,	0,	1};
+	if (scale == 0) {
+		scale =1;
+	}
+	
+	double scaleMatrixData[4*4] = {	scale,	0,		0,		0,
+								   	0,		scale,	0,		0,
+									0,		0,		scale,	0,
+									0,		0,		0,		1};
 
 	cv::Mat rotationMatrixRoll(4,4,CV_64F,rotationMatrixRollData);
 	cv::Mat rotationMatrixPitch(4,4,CV_64F,rotationMatrixPitchData);
 	cv::Mat rotationMatrixYaw(4,4,CV_64F,rotationMatrixYawData);
 	cv::Mat translationMatrix(4,4,CV_64F,translationMatrixData);
+	cv::Mat scaleMatrix(4,4,CV_64F, scaleMatrixData);
 
-	return (translationMatrix * ((rotationMatrixYaw*rotationMatrixPitch)*rotationMatrixRoll));
+	cv::Mat transformationMatrix = translationMatrix * 
+                               (scaleMatrix * 
+                               (rotationMatrixYaw * 
+                               (rotationMatrixPitch * rotationMatrixRoll)));
+
+	return transformationMatrix;
+
 
 
 }
