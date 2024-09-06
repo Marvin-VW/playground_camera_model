@@ -5,6 +5,7 @@
 #include "HomogenousTransformationMatrix.h"
 #include "Window.h"
 #include "CameraModel.h"
+#include "FPSCounter.h"
 
 
 #define DEG_TO_RAD(x) ((x) * (M_PI / 180.0))
@@ -58,8 +59,7 @@ HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
 
 FpsCounter* GraphicsEngine::init_fps(int fps)
 {
-    fc = new FpsCounter();
-    fc->fps_counter(60);
+    fc = new FpsCounter(fps);
 }
 
 FpsCounter* GraphicsEngine::update_fps()

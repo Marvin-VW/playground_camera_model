@@ -1,7 +1,4 @@
 // Copyright (C) 2024 Daniel-VW
-#ifndef FPS_COUNTER_H
-#define FPS_COUNTER_H
-
 #include <vector>
 #include <chrono>
 
@@ -18,5 +15,3 @@ private:
     float fps;
     std::vector<float> fps_history;
 };
-
-#endif

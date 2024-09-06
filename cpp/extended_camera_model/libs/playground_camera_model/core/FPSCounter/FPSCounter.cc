@@ -1,5 +1,5 @@
 // Copyright (C) 2024 Daniel-VW
-#include "fps_counter.h"
+#include "FPSCounter.h"
 
 FpsCounter::FpsCounter(int filter_window_size)
     : filter_window_size(filter_window_size), fps(0.0f) {

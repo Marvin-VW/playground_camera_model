@@ -17,7 +17,7 @@ public:
 	static GraphicsEngine* get();
     CameraModel* create_matrices();
     HomogenousTransformationMatrix* init_matrices();
-    FpsCounter* init_fps();
+    FpsCounter* init_fps(int fps);
     FpsCounter* update_fps();
 
     Shape* createCube();

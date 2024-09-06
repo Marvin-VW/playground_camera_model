@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 
     //init engine (window)
     engine->init();
+    engine->init_fps(60);
 
     //instances of shape, camera and matrix
     Shape* shape = engine->createCube();
@@ -44,6 +45,7 @@ int main(int argc, char** argv) {
         camera->drawAllPoints(camera_mesh);
         camera->drawAllLines(camera_mesh);
 
+        engine->update_fps();
         engine->renderFrame();
 
         if (cv::waitKey(10) == 27) { // Break loop on ESC key
