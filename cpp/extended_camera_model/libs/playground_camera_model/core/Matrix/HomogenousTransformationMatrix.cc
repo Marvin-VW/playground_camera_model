@@ -1,11 +1,7 @@
 // Copyright (C) 2024 twyleg
-#include "homogeneous_transformation_matrix.h"
+#include "HomogenousTransformationMatrix.h"
 
-
-namespace playground_camera_model::homogeneous_transformation_matrix {
-
-
-cv::Mat createHomogeneousTransformationMatrix(
+cv::Mat HomogenousTransformationMatrix::createHomogeneousTransformationMatrix(
 		double translationX,
 		double translationY,
 		double translationZ,
@@ -40,20 +36,4 @@ cv::Mat createHomogeneousTransformationMatrix(
 	cv::Mat translationMatrix(4,4,CV_64F,translationMatrixData);
 
 	return (translationMatrix * ((rotationMatrixYaw*rotationMatrixPitch)*rotationMatrixRoll));
-
-
-}
-
-cv::Mat createPoint(double x, double y, double z){
-
-	cv::Mat point(4,1,CV_64F);
-
-	point.at<double>(0) = x;
-	point.at<double>(1) = y;
-	point.at<double>(2) = z;
-	point.at<double>(3) = 1;
-
-	return point;
-}
-
 }

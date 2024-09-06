@@ -14,3 +14,4 @@ add_subdirectory(apps/playground_camera_model)
 
 # Unit Tests
 add_subdirectory(${CMAKE_SOURCE_DIR}/unit_tests)
+ 

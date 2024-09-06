@@ -87,7 +87,6 @@ class Cube:
 
 
 
-
 class Rectangle:
     
     @staticmethod  
