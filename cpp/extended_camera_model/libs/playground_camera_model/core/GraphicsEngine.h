@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #pragma once
 
 #include <cstdint>
@@ -6,6 +7,7 @@
 class Shape;
 class CameraModel;
 class HomogenousTransformationMatrix;
+class FpsCounter;
 
 class GraphicsEngine
 {
@@ -15,6 +17,8 @@ public:
 	static GraphicsEngine* get();
     CameraModel* create_matrices();
     HomogenousTransformationMatrix* init_matrices();
+    FpsCounter* init_fps();
+    FpsCounter* update_fps();
 
     Shape* createCube();
     CameraModel* createCamera(  double sensorWidth,
@@ -52,10 +56,13 @@ private:
 private:
     friend class Shape;
     friend class HomogenousTransformationMatrix;
+    friend class FpsCounter;
 private:
     std::vector<triangle> mesh;
 private:
     CameraModel* cm;
     HomogenousTransformationMatrix* ht;
+private:
+    FpsCounter* fc;
 
 };

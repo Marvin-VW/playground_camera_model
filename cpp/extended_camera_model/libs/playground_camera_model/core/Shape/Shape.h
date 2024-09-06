@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #pragma once
 #include <vector>
 #include <opencv2/opencv.hpp>

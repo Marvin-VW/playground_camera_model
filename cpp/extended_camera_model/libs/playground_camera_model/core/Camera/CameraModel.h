@@ -1,4 +1,4 @@
-// Copyright (C) 2024 twyleg
+// Copyright (C) 2024 twyleg, Marvin-VW
 #pragma once
 
 #include <cstdint>

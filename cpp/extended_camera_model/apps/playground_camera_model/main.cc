@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #include "GraphicsEngine.h"
 #include "Shape.h"
 #include "CameraModel.h"

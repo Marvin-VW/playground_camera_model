@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #include "GraphicsEngine.h"
 #include "Shape.h"
 #include "iostream"
@@ -53,6 +54,19 @@ HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
     cm->V_T_Cube = ht->createHomogeneousTransformationMatrix(2, 0, 1, 0, 0, 0);
 
     return ht;
+}
+
+FpsCounter* GraphicsEngine::init_fps(int fps)
+{
+    fc = new FpsCounter();
+    fc->fps_counter(60);
+}
+
+FpsCounter* GraphicsEngine::update_fps()
+{
+    fc->update();
+    std::string fps_text = "FPS: " + std::to_string(static_cast<int>(fc->get_fps_filtered()));
+    cv::putText(cm->getCameraImage(), fps_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
 }
 
 

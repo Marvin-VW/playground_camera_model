@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #include <iostream>
 #include <vector>
 #include "Shape.h"

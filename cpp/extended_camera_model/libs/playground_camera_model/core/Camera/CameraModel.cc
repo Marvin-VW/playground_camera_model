@@ -1,4 +1,4 @@
-// Copyright (C) 2024 twyleg
+// Copyright (C) 2024 twyleg, Marvin-VW
 #include "CameraModel.h"
 #include "Shape.h"
 #include <opencv2/opencv.hpp>
