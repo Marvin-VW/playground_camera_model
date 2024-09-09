@@ -38,6 +38,7 @@ public:
     void drawCameraImageLine(const cv::Mat& point0, const cv::Mat& point1);
     void drawAllLines(const std::vector<triangle>& mesh);
     void transform(const cv::Mat* matrix, const std::vector<triangle>& original_mesh, std::vector<triangle>& new_mesh);
+    cv::Vec3f getCameraVector(const cv::Mat& V_T_C);
 
     void resetCameraImage();
     cv::Mat& getCameraImage();

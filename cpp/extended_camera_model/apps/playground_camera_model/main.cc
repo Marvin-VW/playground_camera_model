@@ -25,6 +25,10 @@ int main(int argc, char** argv) {
     // Start rendering loop
     while (true) {
 
+        cv::Vec3f camera_vector_world = camera->getCameraVector(camera->V_T_C);
+
+        std::cout << camera_vector_world << std::endl;
+
         camera->resetCameraImage();
 
         engine->create_matrices();
@@ -32,10 +36,8 @@ int main(int argc, char** argv) {
         std::vector<triangle> world_mesh;
         std::vector<triangle> camera_mesh;
 
-        // Apply V_T_Cube transformation (from world space to cube space)
         camera->transform(&camera->V_T_Cube, mesh, world_mesh);
 
-        // Apply C_T_V transformation (from cube space to camera space)
         camera->transform(&camera->C_T_V, world_mesh, camera_mesh);
 
         camera->drawAllPoints(camera_mesh);

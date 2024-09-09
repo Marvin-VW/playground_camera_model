@@ -106,6 +106,22 @@ void CameraModel::transform(const cv::Mat* matrix, const std::vector<triangle>& 
     }
 }
 
+cv::Vec3f CameraModel::getCameraVector(const cv::Mat& V_T_C) {
+        cv::Mat rotation_matrix = V_T_C(cv::Range(0, 3), cv::Range(0, 3));
+        cv::Vec3f forward_vector(rotation_matrix.at<float>(0, 2),
+                                 rotation_matrix.at<float>(1, 2),
+                                 rotation_matrix.at<float>(2, 2));
+
+        cv::Vec3f camera_position(V_T_C.at<float>(0, 3),
+                                  V_T_C.at<float>(1, 3),
+                                  V_T_C.at<float>(2, 3));
+
+        float final_vector_x = forward_vector[0] + camera_position[0];
+        float final_vector_y = forward_vector[1] + camera_position[1];
+        float final_vector_z = forward_vector[2] + camera_position[2];
+
+        return cv::Vec3f(final_vector_x, final_vector_y, final_vector_z);
+    }
 
 
 void CameraModel::resetCameraImage() {
