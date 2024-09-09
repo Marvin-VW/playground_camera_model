@@ -6,12 +6,13 @@
 #include "Window.h"
 #include "CameraModel.h"
 #include "FPSCounter.h"
-
+#include <exception>
 
 #define DEG_TO_RAD(x) ((x) * (M_PI / 180.0))
 
-bool GraphicsEngine::init() {
-    // Initialize transformation parameters
+GraphicsEngine::GraphicsEngine() {
+
+        // Initialize transformation parameters
     cameraSystemTranslationX = 10000;
     cameraSystemTranslationY = 10000;
     cameraSystemTranslationZ = 11000;
@@ -30,24 +31,16 @@ bool GraphicsEngine::init() {
 
     cubeSystemScale = 0;
 
-
-
     // Create GUI
     Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                        &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
     Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
                                      &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale);
-    
-    return true;
-}
 
-
-bool GraphicsEngine::release()
-{
-
+                                
+    fc = new FpsCounter(60);
 
 }
-
 
 HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
 {
@@ -61,10 +54,6 @@ HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
     return ht;
 }
 
-FpsCounter* GraphicsEngine::init_fps(int fps)
-{
-    fc = new FpsCounter(fps);
-}
 
 FpsCounter* GraphicsEngine::update_fps()
 {
@@ -103,12 +92,6 @@ CameraModel* GraphicsEngine::create_matrices()
 }
 
 
-GraphicsEngine* GraphicsEngine::get()
-{
-    static GraphicsEngine engine;
-    return &engine;
-}
-
 Shape* GraphicsEngine::createCube() {
 
     Shape* sp = new Shape();
@@ -140,11 +123,13 @@ void GraphicsEngine::renderFrame() {
 
 }
 
-bool GraphicsEngine::isRunning() {
+GraphicsEngine::~GraphicsEngine() {
 
 }
 
 void GraphicsEngine::shutdown() {
     std::cout << "Shutting down Graphics Engine" << std::endl;
-    delete this;
+    delete ht;
+    delete cm;
+    delete fc;
 }

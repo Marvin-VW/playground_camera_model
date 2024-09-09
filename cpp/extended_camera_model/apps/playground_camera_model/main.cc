@@ -11,11 +11,7 @@
 
 int main(int argc, char** argv) {
     // Initialize the graphics engine
-    GraphicsEngine* engine = GraphicsEngine::get();
-
-    //init engine (window)
-    engine->init();
-    engine->init_fps(60);
+    GraphicsEngine* engine = new GraphicsEngine();
 
     //instances of shape, camera and matrix
     Shape* shape = engine->createCube();
@@ -28,6 +24,8 @@ int main(int argc, char** argv) {
 
     // Start rendering loop
     while (true) {
+
+        std::cout << "resr";
 
         camera->resetCameraImage();
 

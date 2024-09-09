@@ -12,12 +12,11 @@ class FpsCounter;
 class GraphicsEngine
 {
 public:
-	bool init();
+    GraphicsEngine();
+
 	bool release();
-	static GraphicsEngine* get();
     CameraModel* create_matrices();
     HomogenousTransformationMatrix* init_matrices();
-    FpsCounter* init_fps(int fps);
     FpsCounter* update_fps();
 
     Shape* createCube();
@@ -29,14 +28,11 @@ public:
                                                 uint32_t u0,
                                                 uint32_t v0);
 
-    // Render a frame
     void renderFrame();
-
-    // Check if the engine is still running
     bool isRunning();
-
-    // Shut down the engine
     void shutdown();
+
+    ~GraphicsEngine();
 
 private:
     int32_t cameraSystemTranslationX;
@@ -65,5 +61,4 @@ private:
     HomogenousTransformationMatrix* ht;
 private:
     FpsCounter* fc;
-
 };
