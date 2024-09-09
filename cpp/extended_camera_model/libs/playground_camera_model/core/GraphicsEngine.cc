@@ -28,11 +28,15 @@ bool GraphicsEngine::init() {
     cubeSystemRotationPitch = 0;
     cubeSystemRotationYaw = 0;
 
+    cubeSystemScale = 0;
+
+
+
     // Create GUI
     Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                        &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
     Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
-                                     &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw);
+                                     &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale);
     
     return true;
 }
@@ -50,9 +54,9 @@ HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
 
     ht = new HomogenousTransformationMatrix();
 
-    cm->V_T_C = ht->createHomogeneousTransformationMatrix(0, 0, 0, 0, 0, 0);
+    cm->V_T_C = ht->createHomogeneousTransformationMatrix(0, 0, 0, 0, 0, 0, 0);
     cm->C_T_V = cm->V_T_C.inv();
-    cm->V_T_Cube = ht->createHomogeneousTransformationMatrix(2, 0, 1, 0, 0, 0);
+    cm->V_T_Cube = ht->createHomogeneousTransformationMatrix(2, 0, 1, 0, 0, 0, 0);
 
     return ht;
 }
@@ -80,7 +84,8 @@ CameraModel* GraphicsEngine::create_matrices()
         (cameraSystemTranslationZ - 10000) / 1000.0,
         DEG_TO_RAD(cameraSystemRotationRoll / 10.0),
         DEG_TO_RAD(cameraSystemRotationPitch / 10.0),
-        DEG_TO_RAD(cameraSystemRotationYaw / 10.0));
+        DEG_TO_RAD(cameraSystemRotationYaw / 10.0),
+        1.0f);
 
     // Compute inverse (world to camera matrix)
     cm->C_T_V = cm->V_T_C.inv();
@@ -92,7 +97,8 @@ CameraModel* GraphicsEngine::create_matrices()
         (cubeSystemTranslationZ - 10000) / 1000.0,
         DEG_TO_RAD(cubeSystemRotationRoll / 10.0),
         DEG_TO_RAD(cubeSystemRotationPitch / 10.0),
-        DEG_TO_RAD(cubeSystemRotationYaw / 10.0));
+        DEG_TO_RAD(cubeSystemRotationYaw / 10.0),
+        cubeSystemScale);
 
 }
 

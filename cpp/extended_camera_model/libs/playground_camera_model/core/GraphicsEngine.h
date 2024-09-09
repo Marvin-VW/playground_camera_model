@@ -52,6 +52,7 @@ private:
     int32_t cubeSystemRotationRoll;
     int32_t cubeSystemRotationPitch;
     int32_t cubeSystemRotationYaw;
+    int32_t cubeSystemScale;
 
 private:
     friend class Shape;

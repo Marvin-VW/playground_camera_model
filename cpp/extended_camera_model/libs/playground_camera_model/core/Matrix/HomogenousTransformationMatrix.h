@@ -12,6 +12,7 @@ public:
 			double translationZ,
 			double rotationRoll,
 			double rotationPitch,
-			double rotationYaw);
+			double rotationYaw,
+			double scale);
 
 };
