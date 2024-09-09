@@ -25,8 +25,6 @@ int main(int argc, char** argv) {
     // Start rendering loop
     while (true) {
 
-        std::cout << "resr";
-
         camera->resetCameraImage();
 
         engine->create_matrices();

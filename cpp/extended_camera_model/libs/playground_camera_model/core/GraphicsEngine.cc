@@ -44,7 +44,6 @@ GraphicsEngine::GraphicsEngine() {
 
 HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
 {
-
     ht = new HomogenousTransformationMatrix();
 
     cm->V_T_C = ht->createHomogeneousTransformationMatrix(0, 0, 0, 0, 0, 0, 0);
