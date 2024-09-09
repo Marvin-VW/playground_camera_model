@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "CameraModel.h"
 #include "FPSCounter.h"
+#include "ClippingSpace.h"
 #include <exception>
 
 #define DEG_TO_RAD(x) ((x) * (M_PI / 180.0))
@@ -23,7 +24,7 @@ GraphicsEngine::GraphicsEngine() {
 
     cubeSystemTranslationX = 14000;
     cubeSystemTranslationY = 10000;
-    cubeSystemTranslationZ = 11000;
+    cubeSystemTranslationZ = 7732;
 
     cubeSystemRotationRoll = 0;
     cubeSystemRotationPitch = 0;
@@ -53,12 +54,18 @@ HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
     return ht;
 }
 
+ClippingSpace *GraphicsEngine::init_clipping()
+{
+    cs = new ClippingSpace();
+    return cs;
+}
 
 FpsCounter* GraphicsEngine::update_fps()
 {
     fc->update();
     std::string fps_text = "FPS: " + std::to_string(static_cast<int>(fc->get_fps_filtered()));
     cv::putText(cm->getCameraImage(), fps_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+
     return fc;
 }
 
@@ -89,6 +96,8 @@ CameraModel* GraphicsEngine::create_matrices()
         DEG_TO_RAD(cubeSystemRotationYaw / 10.0),
         cubeSystemScale);
         return cm;
+
+    return cm;
 
 }
 

@@ -27,6 +27,8 @@ add_library(${TARGET_NAME}
     FPSCounter/FPSCounter.h
     GraphicsEngine.cc
     GraphicsEngine.h
+    ClippingSpace/ClippingSpace.cc
+    ClippingSpace/ClippingSpace.h
 )
 
 add_library("${NAMESPACE}::${MODULE}" ALIAS ${TARGET_NAME})
@@ -58,6 +60,7 @@ target_include_directories(${TARGET_NAME}
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Shape
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Window
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/FPSCounter
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ClippingSpace
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/
     PRIVATE ${OpenCV_INCLUDE_DIRS}
 )
