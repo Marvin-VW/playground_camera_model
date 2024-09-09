@@ -59,6 +59,7 @@ FpsCounter* GraphicsEngine::update_fps()
     fc->update();
     std::string fps_text = "FPS: " + std::to_string(static_cast<int>(fc->get_fps_filtered()));
     cv::putText(cm->getCameraImage(), fps_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+    return fc;
 }
 
 
@@ -87,6 +88,7 @@ CameraModel* GraphicsEngine::create_matrices()
         DEG_TO_RAD(cubeSystemRotationPitch / 10.0),
         DEG_TO_RAD(cubeSystemRotationYaw / 10.0),
         cubeSystemScale);
+        return cm;
 
 }
 
