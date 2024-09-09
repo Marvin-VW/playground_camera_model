@@ -8,6 +8,7 @@ class Shape;
 class CameraModel;
 class HomogenousTransformationMatrix;
 class FpsCounter;
+class ClippingSpace;
 
 class GraphicsEngine
 {
@@ -17,6 +18,7 @@ public:
 	bool release();
     CameraModel* create_matrices();
     HomogenousTransformationMatrix* init_matrices();
+    ClippingSpace* init_clipping();
     FpsCounter* update_fps();
 
     Shape* createCube();
@@ -59,6 +61,7 @@ private:
 private:
     CameraModel* cm;
     HomogenousTransformationMatrix* ht;
+    ClippingSpace * cs;
 private:
     FpsCounter* fc;
 };

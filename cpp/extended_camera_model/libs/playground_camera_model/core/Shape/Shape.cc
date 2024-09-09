@@ -31,11 +31,11 @@ std::vector<triangle> Shape::generate_mesh() {
     cv::Mat Cube_cubeP7 = createPoint( 1,  1,  1);
 
     mesh = {
-        // Front face
+        // Top face
         { {Cube_cubeP4, Cube_cubeP5, Cube_cubeP6} },
         { {Cube_cubeP4, Cube_cubeP6, Cube_cubeP7} },
 
-        // Back face
+        // Bottom face
         { {Cube_cubeP1, Cube_cubeP0, Cube_cubeP2} },
         { {Cube_cubeP2, Cube_cubeP0, Cube_cubeP3} },
 
