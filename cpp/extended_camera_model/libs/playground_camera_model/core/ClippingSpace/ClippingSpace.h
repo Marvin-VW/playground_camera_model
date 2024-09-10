@@ -8,7 +8,7 @@ class ClippingSpace
 public:
     ClippingSpace();
 
-    std::vector<triangle> cubeInSpace(const std::vector<triangle>& cube_points);
+    std::vector<triangle> cubeInSpace(const std::vector<triangle>* cube_points);
 
 private:
     cv::Mat projection_matrix;

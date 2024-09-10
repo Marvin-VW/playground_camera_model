@@ -7,6 +7,7 @@
 #include "CameraModel.h"
 #include "FPSCounter.h"
 #include "ClippingSpace.h"
+#include "Vectors.h"
 #include <exception>
 
 #define DEG_TO_RAD(x) ((x) * (M_PI / 180.0))
@@ -14,7 +15,7 @@
 GraphicsEngine::GraphicsEngine() {
 
         // Initialize transformation parameters
-    cameraSystemTranslationX = 10000;
+    cameraSystemTranslationX = 8000;
     cameraSystemTranslationY = 10000;
     cameraSystemTranslationZ = 11000;
 
@@ -24,7 +25,7 @@ GraphicsEngine::GraphicsEngine() {
 
     cubeSystemTranslationX = 14000;
     cubeSystemTranslationY = 10000;
-    cubeSystemTranslationZ = 7732;
+    cubeSystemTranslationZ = 9000;
 
     cubeSystemRotationRoll = 0;
     cubeSystemRotationPitch = 0;
@@ -58,6 +59,12 @@ ClippingSpace *GraphicsEngine::init_clipping()
 {
     cs = new ClippingSpace();
     return cs;
+}
+
+Vectors* GraphicsEngine::init_vector()
+{
+    v = new Vectors();
+    return v;
 }
 
 FpsCounter* GraphicsEngine::update_fps()

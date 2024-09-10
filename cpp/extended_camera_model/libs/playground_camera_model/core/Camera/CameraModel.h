@@ -34,10 +34,12 @@ public:
                 uint32_t v0);
 
     void drawCameraImagePoint(const cv::Mat& point);
-    void drawAllPoints(const std::vector<triangle>& mesh);
+    void drawAllPoints(const std::vector<triangle>* mesh);
     void drawCameraImageLine(const cv::Mat& point0, const cv::Mat& point1);
-    void drawAllLines(const std::vector<triangle>& mesh);
-    void transform(const cv::Mat* matrix, const std::vector<triangle>& original_mesh, std::vector<triangle>& new_mesh);
+    void drawAllLines(const std::vector<triangle>* mesh);
+    void drawCameraImageArrow(const cv::Mat& C_point0, const cv::Mat& C_point1);
+    void world_transform(const cv::Mat* matrix, triangle* tri);
+    void camera_transform(const cv::Mat* matrix, triangle* tri);
     cv::Vec3f getCameraVector(const cv::Mat& V_T_C);
 
     void resetCameraImage();

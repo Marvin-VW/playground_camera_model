@@ -4,6 +4,7 @@
 #include "CameraModel.h"
 #include "HomogenousTransformationMatrix.h"
 #include "ClippingSpace.h"
+#include "Vectors.h"
 #include <cmath>
 
 #include <iostream>
@@ -19,9 +20,10 @@ int main(int argc, char** argv) {
     CameraModel* camera = engine->createCamera(0.00452, 0.00254, 0.004, 1280, 720, 1280 / 2, 720 / 2);
     HomogenousTransformationMatrix* matrix = engine->init_matrices();
     ClippingSpace* clipping = engine->init_clipping();
+    Vectors* vec = engine->init_vector();
 
     //generate cube mesh
-    const std::vector<triangle> mesh = shape->generate_mesh();
+    std::vector<triangle> mesh = shape->generate_mesh();
 
 
     // Start rendering loop
@@ -29,26 +31,36 @@ int main(int argc, char** argv) {
 
         cv::Vec3f camera_vector_world = camera->getCameraVector(camera->V_T_C);
 
-        std::cout << camera_vector_world << std::endl;
-
         camera->resetCameraImage();
 
         engine->create_matrices();
 
-        std::vector<triangle> world_mesh;
-        std::vector<triangle> camera_mesh;
+        for (auto& tri : mesh) {
 
-        camera->transform(&camera->V_T_Cube, mesh, world_mesh);
+            camera->world_transform(&camera->V_T_Cube, &tri);
 
-        camera->transform(&camera->C_T_V, world_mesh, camera_mesh);
+            camera->camera_transform(&camera->C_T_V, &tri);
+
+            std::tuple<cv::Mat, cv::Mat> result = vec->normal(tri, 0.5f);
+
+            // Unpack the tuple
+            cv::Mat normal_start = std::get<0>(result);
+            cv::Mat normal_end = std::get<1>(result);
+
+            //normal to camera
+            cv::Mat normal_start_camera = camera->C_T_V * normal_start;
+            cv::Mat normal_end_camera = camera->C_T_V * normal_end;
+
+            camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
+
+        }
 
         //clipping
         std::vector<triangle> clipped_mesh;
-        clipped_mesh = clipping->cubeInSpace(camera_mesh);
+        clipped_mesh = clipping->cubeInSpace(&mesh);
 
-
-        camera->drawAllPoints(clipped_mesh);
-        camera->drawAllLines(clipped_mesh);
+        camera->drawAllPoints(&clipped_mesh);
+        camera->drawAllLines(&clipped_mesh);
 
         engine->update_fps();
         engine->renderFrame();

@@ -7,6 +7,10 @@ using namespace std;
 struct triangle
 {
 	cv::Mat point[3];
+    cv::Mat camera_points[3];
+    cv::Mat world_points[3];
+    cv::Mat normal;
+    cv::Mat centroid;
 };
 
 struct mesh

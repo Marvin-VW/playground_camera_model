@@ -37,9 +37,9 @@ CameraModel::CameraModel(double sensorWidth, double sensorHeight, double focalLe
     I_T_C = matrixK * matrixC;
 }
 
-void CameraModel::drawAllPoints(const std::vector<triangle>& mesh) {
-    for (const auto& tri : mesh) {
-        for (const auto& vertex : tri.point) {
+void CameraModel::drawAllPoints(const std::vector<triangle>* mesh) {
+    for (const auto& tri : *mesh) {
+        for (const auto& vertex : tri.camera_points) {
             drawCameraImagePoint(vertex);
         }
     }
@@ -58,11 +58,11 @@ void CameraModel::drawCameraImagePoint(const cv::Mat& C_point){
 
 }
 
-void CameraModel::drawAllLines(const std::vector<triangle>& mesh) {
-    for (const auto& tri : mesh) {
-        drawCameraImageLine(tri.point[0], tri.point[1]);
-        drawCameraImageLine(tri.point[1], tri.point[2]);
-        drawCameraImageLine(tri.point[2], tri.point[0]);
+void CameraModel::drawAllLines(const std::vector<triangle>* mesh) {
+    for (const auto& tri : *mesh) {
+        drawCameraImageLine(tri.camera_points[0], tri.camera_points[1]);
+        drawCameraImageLine(tri.camera_points[1], tri.camera_points[2]);
+        drawCameraImageLine(tri.camera_points[2], tri.camera_points[0]);
     }
 }
 
@@ -84,25 +84,45 @@ void CameraModel::drawCameraImageLine(const cv::Mat& C_point0, const cv::Mat& C_
 	cv::line(cameraImage, point0, point1, cv::Scalar(255,0,0), 1);
 }
 
-void CameraModel::transform(const cv::Mat* matrix, const std::vector<triangle>& original_mesh, std::vector<triangle>& new_mesh) {
-    new_mesh.clear();
-    
-    // Iterate over each triangle in the original mesh
-    for (const auto& tri : original_mesh) {
-        triangle new_tri;
-        
-        // Iterate over each vertex in the triangle
-        for (int i = 0; i < 3; ++i) {
-            // Apply the transformation matrix to the vertex
-            cv::Mat point = tri.point[i];
-            cv::Mat transformed_point = (*matrix) * point;
+void CameraModel::drawCameraImageArrow(const cv::Mat& C_point0, const cv::Mat& C_point1) {
+    try {
+        // Compute image points
+        cv::Mat I_point0 = I_T_C * C_point0;
+        cv::Mat I_point1 = I_T_C * C_point1;
 
-            // Update the new triangle with the transformed coordinates
-            new_tri.point[i] = transformed_point;
-        }
+        // Convert to homogeneous coordinates
+        double u0 = I_point0.at<double>(0) / I_point0.at<double>(2);
+        double v0 = I_point0.at<double>(1) / I_point0.at<double>(2);
+        double u1 = I_point1.at<double>(0) / I_point1.at<double>(2);
+        double v1 = I_point1.at<double>(1) / I_point1.at<double>(2);
+
+        // Draw the arrowed line
+        cv::arrowedLine(cameraImage, cv::Point(static_cast<int>(u0), static_cast<int>(v0)),
+                        cv::Point(static_cast<int>(u1), static_cast<int>(v1)),
+                        cv::Scalar(0, 255, 0), 2);
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Could not draw normal: " + std::string(e.what()));
+    }
+}
+
+void CameraModel::world_transform(const cv::Mat* matrix, triangle* tri) {
         
-        // Add the transformed triangle to the new mesh
-        new_mesh.push_back(new_tri);
+    for (int i = 0; i < 3; ++i) {
+
+        cv::Mat point = tri->point[i];
+        cv::Mat transformed_point = (*matrix) * point;
+
+        tri->world_points[i] = transformed_point;
+    }
+    
+}
+
+void CameraModel::camera_transform(const cv::Mat* matrix, triangle* tri) {
+    for (int i = 0; i < 3; ++i) {
+        cv::Mat point = tri->world_points[i];
+        cv::Mat transformed_point = (*matrix) * point;
+
+        tri->camera_points[i] = transformed_point;
     }
 }
 

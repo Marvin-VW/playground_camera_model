@@ -16,7 +16,7 @@ ClippingSpace::ClippingSpace()
     double far = 100.0;
     create_perspective_projection_matrix(fov, aspect_ratio, near, far);
 
-    border = 1.0f;
+    border = 0.9f;
 }
 
 cv::Mat ClippingSpace::create_perspective_projection_matrix(double fov, double aspect_ratio, double near, double far) {
@@ -36,14 +36,14 @@ cv::Mat ClippingSpace::create_perspective_projection_matrix(double fov, double a
     return matrix;
 }
 
-std::vector<triangle> ClippingSpace::cubeInSpace(const std::vector<triangle>& cube_points)
+std::vector<triangle> ClippingSpace::cubeInSpace(const std::vector<triangle>* cube_points)
 {
     std::vector<triangle> full_triangle_list;
-    for (const auto& tri : cube_points)
+    for (const auto& tri : *cube_points)
     {
 
         std::vector<cv::Mat> inside_points, outside_points;
-        for (const auto& point : tri.point)
+        for (const auto& point : tri.camera_points)
         {
 
             cv::Mat clip_space_point = projection_matrix * point;
