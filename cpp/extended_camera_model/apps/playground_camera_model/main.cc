@@ -59,11 +59,12 @@ int main(int argc, char** argv) {
             cv::Mat normal_start_camera = camera->C_T_V * normal_start;
             cv::Mat normal_end_camera = camera->C_T_V * normal_end;
 
-            if (engine->cubeSystemNormals == 1)
-                camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
-
             //backface culling
             if (is_triangle_facing_camera(tri, camera_vector_world) < 0.0f) {
+
+
+                if (engine->cubeSystemNormals == 1)
+                    camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
 
                 cv::Vec3f light_direction(1.0f, -0.5f, -0.8f);
                 cv::Scalar base_color(255, 248, 240);
