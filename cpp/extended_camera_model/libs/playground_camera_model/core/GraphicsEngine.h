@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "Shape.h" 
-
+#include "Window.h"
 class Shape;
 class CameraModel;
 class HomogenousTransformationMatrix;
@@ -11,6 +11,7 @@ class FpsCounter;
 class ClippingSpace;
 class Vectors;
 class Color;
+class Window;
 
 class GraphicsEngine
 {
@@ -37,10 +38,10 @@ public:
     void renderFrame();
     bool isRunning();
     void shutdown();
-
+    void update_movement(int key);
     ~GraphicsEngine();
 
-private:
+public:
     int32_t cameraSystemTranslationX;
     int32_t cameraSystemTranslationY;
     int32_t cameraSystemTranslationZ;
@@ -73,4 +74,5 @@ private:
 
 private:
     FpsCounter* fc;
+    Window window;
 };
