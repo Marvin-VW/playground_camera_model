@@ -1,4 +1,4 @@
-// Copyright (C) 2024 Daniel-VW
+// Copyright (C) 2024 Daniel-VW, Marvin-VW, twyleg
 #include "Window.h"
 #include <opencv2/opencv.hpp>
 #include <cmath>

@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "Shape.h"

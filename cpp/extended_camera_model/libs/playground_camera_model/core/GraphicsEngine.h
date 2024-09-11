@@ -39,7 +39,6 @@ public:
     bool isRunning();
     void shutdown();
     void update_movement(int key);
-    ~GraphicsEngine();
 
 public:
     int32_t cameraSystemTranslationX;
@@ -76,8 +75,6 @@ private:
     ClippingSpace * cs;
     Vectors* v;
     Color* c;
-
-private:
     FpsCounter* fc;
-    Window window;
+    Window* window;
 };

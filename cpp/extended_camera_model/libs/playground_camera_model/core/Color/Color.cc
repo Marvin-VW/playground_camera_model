@@ -1,3 +1,4 @@
+// Copyright (C) 2024 Marvin-VW
 #include "Color.h"
 #include <opencv2/opencv.hpp>
     

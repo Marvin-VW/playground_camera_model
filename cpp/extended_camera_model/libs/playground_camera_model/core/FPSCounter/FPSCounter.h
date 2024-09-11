@@ -1,4 +1,4 @@
-// Copyright (C) 2024 Daniel-VW
+// Copyright (C) twyleg, 2024 Daniel-VW
 #include <vector>
 #include <chrono>
 

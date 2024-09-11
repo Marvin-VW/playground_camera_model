@@ -163,8 +163,6 @@ cv::Vec3f CameraModel::getCameraVector(const cv::Mat& V_T_C) {
     return cv::Vec3f(final_vector_x, final_vector_y, final_vector_z);
 }
 
-
-
 void CameraModel::resetCameraImage() {
     cameraImage = cv::Scalar(255, 255, 255);
 }

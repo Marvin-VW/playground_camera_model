@@ -41,9 +41,9 @@ GraphicsEngine::GraphicsEngine() {
 
 
     // Create GUI
-    window.createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+    window->createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                        &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
-    window.createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
+    window->createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
                                      &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale, 
                                      &cubeSystemNormals, &cubeSystemPoints, &cubeSystemFaces);
 
@@ -81,15 +81,6 @@ Vectors* GraphicsEngine::init_vector()
     return v;
 }
 
-FpsCounter* GraphicsEngine::update_fps()
-{
-    fc->update();
-    std::string fps_text = "FPS: " + std::to_string(static_cast<int>(fc->get_fps_filtered()));
-    cv::putText(cm->getCameraImage(), fps_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
-
-    return fc;
-}
-
 
 CameraModel* GraphicsEngine::create_matrices()
 {
@@ -121,7 +112,6 @@ CameraModel* GraphicsEngine::create_matrices()
 
 }
 
-
 Shape* GraphicsEngine::createCube() {
 
     Shape* sp = new Shape();
@@ -148,22 +138,34 @@ CameraModel* GraphicsEngine::createCamera(  double sensorWidth,
 }
 
 void GraphicsEngine::update_movement(int key) {
-    window.handleMovement(key, &cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+    window->handleMovement(key, &cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                             &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
 }
+
+
+FpsCounter* GraphicsEngine::update_fps()
+{
+    fc->update();
+    std::string fps_text = "FPS: " + std::to_string(static_cast<int>(fc->get_fps_filtered()));
+    cv::putText(cm->getCameraImage(), fps_text, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 0), 2);
+
+    return fc;
+}
+
+
 void GraphicsEngine::renderFrame() {
 
         cv::imshow("image window", cm->getCameraImage());
 
 }
 
-GraphicsEngine::~GraphicsEngine() {
-
-}
-
 void GraphicsEngine::shutdown() {
     std::cout << "Shutting down Graphics Engine" << std::endl;
-    delete ht;
     delete cm;
+    delete ht;
+    delete cs;
+    delete v;
+    delete c;
     delete fc;
+    delete window;
 }

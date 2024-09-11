@@ -58,16 +58,3 @@ std::vector<triangle> Shape::generate_mesh() {
 
     return mesh;
 }
-
-
-void Shape::setPosition(float x, float y, float z) {
-    std::cout << "Setting position to (" << x << ", " << y << ", " << z << ")" << std::endl;
-}
-
-void Shape::setScale(float scaleX, float scaleY, float scaleZ) {
-    std::cout << "Setting scale to (" << scaleX << ", " << scaleY << ", " << scaleZ << ")" << std::endl;
-}
-
-void Shape::setRotation(float rotX, float rotY, float rotZ) {
-    std::cout << "Setting rotation to (" << rotX << ", " << rotY << ", " << rotZ << ")" << std::endl;
-}

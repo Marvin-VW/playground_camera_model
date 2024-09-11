@@ -7,16 +7,13 @@
 
 #define DEG_TO_RAD(x) ((x) * (M_PI / 180.0))
 
-
 const cv::Mat appendHomogeneousCoordinate(const cv::Mat& point);
 
 cv::Mat Vectors::vector(const cv::Mat& point1, const cv::Mat& point2) {
     return point2 - point1;
 }
 
-
 std::tuple<cv::Mat, cv::Mat> Vectors::normal(triangle& tri, float scale) {
-
 
     cv::Mat p1 = tri.world_points[0].rowRange(0, 3);
     cv::Mat p2 = tri.world_points[1].rowRange(0, 3);

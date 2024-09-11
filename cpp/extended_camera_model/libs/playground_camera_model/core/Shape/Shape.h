@@ -27,15 +27,4 @@ public:
 	cv::Mat createPoint(double x, double y, double z);
     std::vector<triangle> generate_mesh();
 
-
-
-    // Set position of the shape
-    void setPosition(float x, float y, float z);
-
-    // Set scale of the shape
-    void setScale(float scaleX, float scaleY, float scaleZ);
-
-    // Set rotation of the shape
-    void setRotation(float rotX, float rotY, float rotZ);
-
 };
