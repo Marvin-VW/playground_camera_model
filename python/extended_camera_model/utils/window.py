@@ -19,7 +19,7 @@ class Window:
         self.cube_system_translation_z = 10000
         self.cube_system_rotation_roll = 0
         self.cube_system_rotation_pitch = 0
-        self.cube_system_rotation_yaw = 300
+        self.cube_system_rotation_yaw = 330
         self.cube_system_scale = 1
 
         self.camera_window_name = "camera settings"

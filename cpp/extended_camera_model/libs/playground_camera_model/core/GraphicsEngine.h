@@ -57,6 +57,11 @@ public:
     int32_t cubeSystemRotationYaw;
     int32_t cubeSystemScale;
 
+    int32_t cubeSystemNormals;
+    int32_t cubeSystemPoints;
+    int32_t cubeSystemFaces;
+
+
 private:
     friend class Shape;
     friend class HomogenousTransformationMatrix;

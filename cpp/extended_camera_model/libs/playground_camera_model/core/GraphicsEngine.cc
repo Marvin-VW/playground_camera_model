@@ -16,29 +16,36 @@
 GraphicsEngine::GraphicsEngine() {
 
     // Initialize transformation parameters
-    cameraSystemTranslationX = 17223;
-    cameraSystemTranslationY = 1445;
-    cameraSystemTranslationZ = 16900;
+    cameraSystemTranslationX = 10000;
+    cameraSystemTranslationY = 10000;
+    cameraSystemTranslationZ = 10000;
 
-    cameraSystemRotationRoll = 2463;
+    cameraSystemRotationRoll = 2700;
     cameraSystemRotationPitch = 0;
-    cameraSystemRotationYaw = 210;
+    cameraSystemRotationYaw = 2700;
 
-    cubeSystemTranslationX = 12263;
-    cubeSystemTranslationY = 14403;
+    cubeSystemTranslationX = 16000;
+    cubeSystemTranslationY = 10000;
     cubeSystemTranslationZ = 10000;
 
     cubeSystemRotationRoll = 0;
     cubeSystemRotationPitch = 0;
-    cubeSystemRotationYaw = 0;
+    cubeSystemRotationYaw = 350;
 
-    cubeSystemScale = 0;
+    cubeSystemScale = 1;
+
+    cubeSystemNormals = 0;
+    cubeSystemPoints = 0;
+    cubeSystemFaces = 1;
+
+
 
     // Create GUI
     window.createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                        &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
     window.createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
-                                     &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale);
+                                     &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale, 
+                                     &cubeSystemNormals, &cubeSystemPoints, &cubeSystemFaces);
 
                                 
     fc = new FpsCounter(60);

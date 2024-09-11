@@ -65,11 +65,12 @@ int main(int argc, char** argv) {
             cv::Mat normal_start_camera = camera->C_T_V * normal_start;
             cv::Mat normal_end_camera = camera->C_T_V * normal_end;
 
-            camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
+            if (engine->cubeSystemNormals == 1)
+                camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
 
             if (is_triangle_facing_camera(tri, camera_vector_world) < 0.0f) {
 
-                cv::Vec3f light_direction(1.0f, 1.0f, -1.2f);
+                cv::Vec3f light_direction(1.0f, -0.5f, -0.8f);
                     
                 cv::Scalar base_color(255, 248, 240);
 
@@ -86,9 +87,17 @@ int main(int argc, char** argv) {
         std::vector<triangle> clipped_mesh;
         clipped_mesh = clipping->cubeInSpace(&visiable_mesh);
 
-        camera->drawAllPoints(&clipped_mesh);
+        if (engine->cubeSystemPoints == 1)
+        {
+            camera->drawAllPoints(&clipped_mesh);
+        }
+
+        if (engine->cubeSystemFaces == 1)
+        {
+                camera->fillCubeFaces(&clipped_mesh);
+        }
+
         camera->drawAllLines(&clipped_mesh);
-        camera->fillCubeFaces(&clipped_mesh);
 
         engine->update_fps();
         engine->renderFrame();

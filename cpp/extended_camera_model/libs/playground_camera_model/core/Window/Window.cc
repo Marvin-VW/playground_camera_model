@@ -16,7 +16,8 @@ void Window::createCameraSettingsWindow(int32_t* cameraSystemTranslationX, int32
 }
 
 void Window::createCubeSettingsWindow(int32_t* cubeSystemTranslationX, int32_t* cubeSystemTranslationY, int32_t* cubeSystemTranslationZ,
-                                         int32_t* cubeSystemRotationRoll, int32_t* cubeSystemRotationPitch, int32_t* cubeSystemRotationYaw, int32_t* cubeSystemScale) {
+                                         int32_t* cubeSystemRotationRoll, int32_t* cubeSystemRotationPitch, int32_t* cubeSystemRotationYaw, int32_t* cubeSystemScale,
+                                         int32_t* cubeSystemNormals, int32_t* cubeSystemPoints, int32_t* cubeSystemFaces) {
                                             
     cv::namedWindow("cube settings", cv::WINDOW_AUTOSIZE);
     cv::createTrackbar("X", "cube settings", cubeSystemTranslationX, 20000);
@@ -26,6 +27,9 @@ void Window::createCubeSettingsWindow(int32_t* cubeSystemTranslationX, int32_t* 
     cv::createTrackbar("Pitch", "cube settings", cubeSystemRotationPitch, 3600);
     cv::createTrackbar("Yaw", "cube settings", cubeSystemRotationYaw, 3600);
     cv::createTrackbar("Scale", "cube settings", cubeSystemScale, 5);
+    cv::createTrackbar("Show Normals", "cube settings", cubeSystemNormals, 1);
+    cv::createTrackbar("Show Points", "cube settings", cubeSystemPoints, 1);
+    cv::createTrackbar("Show Faces", "cube settings", cubeSystemFaces, 1);
 }
 
 void Window::handleMovement(int key, int32_t* cameraSystemTranslationX, int32_t* cameraSystemTranslationY, int32_t* cameraSystemTranslationZ,
