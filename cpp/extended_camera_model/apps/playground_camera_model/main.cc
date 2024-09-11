@@ -92,10 +92,14 @@ int main(int argc, char** argv) {
         }
         camera->drawAllLines(&clipped_mesh);
 
-        int key = cv::waitKey(10) & 0xFF;
-
         engine->update_fps();
         engine->renderFrame();
+
+        int key = cv::waitKey(10) & 0xFF;
+
+        std::cout << key << std::endl;
+
+        
         engine->update_movement(key);
 
         if (key == 27) {

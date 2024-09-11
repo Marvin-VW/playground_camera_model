@@ -76,5 +76,5 @@ private:
     Vectors* v;
     Color* c;
     FpsCounter* fc;
-    Window* window;
+    Window window;
 };

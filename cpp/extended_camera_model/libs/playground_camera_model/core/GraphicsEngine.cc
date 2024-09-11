@@ -32,7 +32,7 @@ GraphicsEngine::GraphicsEngine() {
     cubeSystemRotationPitch = 0;
     cubeSystemRotationYaw = 350;
 
-    cubeSystemScale = 1;
+    cubeSystemScale = 0;
 
     cubeSystemNormals = 0;
     cubeSystemPoints = 0;
@@ -41,9 +41,10 @@ GraphicsEngine::GraphicsEngine() {
 
 
     // Create GUI
-    window->createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+    window.createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                        &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
-    window->createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
+
+    window.createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
                                      &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale, 
                                      &cubeSystemNormals, &cubeSystemPoints, &cubeSystemFaces);
 
@@ -138,7 +139,7 @@ CameraModel* GraphicsEngine::createCamera(  double sensorWidth,
 }
 
 void GraphicsEngine::update_movement(int key) {
-    window->handleMovement(key, &cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+    window.handleMovement(key, &cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                             &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
 }
 
@@ -167,5 +168,4 @@ void GraphicsEngine::shutdown() {
     delete v;
     delete c;
     delete fc;
-    delete window;
 }
