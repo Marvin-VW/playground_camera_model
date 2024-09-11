@@ -92,10 +92,11 @@ int main(int argc, char** argv) {
 
         engine->update_fps();
         engine->renderFrame();
+
         int key = cv::waitKey(10) & 0xFF;
         engine->update_movement(key);
 
-        if (cv::waitKey(10) == 27) {
+        if (key == 27) {
             break;
         }
         
