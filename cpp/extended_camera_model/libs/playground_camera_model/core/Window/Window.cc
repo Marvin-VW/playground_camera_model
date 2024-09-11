@@ -28,11 +28,9 @@ void Window::createCubeSettingsWindow(int32_t* cubeSystemTranslationX, int32_t* 
     cv::createTrackbar("Scale", "cube settings", cubeSystemScale, 5);
 }
 
-void Window::handleMovement(int32_t* cameraSystemTranslationX, int32_t* cameraSystemTranslationY, int32_t* cameraSystemTranslationZ,
+void Window::handleMovement(int key, int32_t* cameraSystemTranslationX, int32_t* cameraSystemTranslationY, int32_t* cameraSystemTranslationZ,
                             int32_t* cameraSystemRotationRoll, int32_t* cameraSystemRotationPitch, int32_t* cameraSystemRotationYaw) {
-    int key = cv::waitKey(30) & 0xFF;
     Direction dir;
-
     switch (key) {
         case 'd': dir = FORWARD; break;
         case 'a': dir = BACKWARD; break;

@@ -140,10 +140,11 @@ CameraModel* GraphicsEngine::createCamera(  double sensorWidth,
 
 }
 
-void GraphicsEngine::renderFrame() {
-
-        window.handleMovement(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+void GraphicsEngine::update_movement(int key) {
+    window.handleMovement(key, &cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                             &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
+}
+void GraphicsEngine::renderFrame() {
 
         cv::imshow("image window", cm->getCameraImage());
 

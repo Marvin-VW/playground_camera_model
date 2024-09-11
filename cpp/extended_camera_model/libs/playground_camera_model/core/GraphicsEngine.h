@@ -38,7 +38,7 @@ public:
     void renderFrame();
     bool isRunning();
     void shutdown();
-
+    void update_movement(int key);
     ~GraphicsEngine();
 
 public:
