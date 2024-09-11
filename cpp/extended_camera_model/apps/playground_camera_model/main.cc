@@ -5,11 +5,22 @@
 #include "HomogenousTransformationMatrix.h"
 #include "ClippingSpace.h"
 #include "Vectors.h"
+#include "Color.h"
 #include <cmath>
 
 #include <iostream>
 
 #define DEG_TO_RAD(x) ((x) * (M_PI / 180.0))
+
+
+static float is_triangle_facing_camera(triangle& tri, cv::Vec3f cam) {
+
+    float dot_product =    tri.normal.at<double>(0) * (tri.centroid.at<double>(0) - cam[0]) +
+                           tri.normal.at<double>(1) * (tri.centroid.at<double>(1) - cam[1]) +
+                           tri.normal.at<double>(2) * (tri.centroid.at<double>(2) - cam[2]);
+
+    return dot_product;
+};
 
 int main(int argc, char** argv) {
     // Initialize the graphics engine
@@ -21,6 +32,7 @@ int main(int argc, char** argv) {
     HomogenousTransformationMatrix* matrix = engine->init_matrices();
     ClippingSpace* clipping = engine->init_clipping();
     Vectors* vec = engine->init_vector();
+    Color* color = engine->init_color();
 
     //generate cube mesh
     std::vector<triangle> mesh = shape->generate_mesh();
@@ -34,6 +46,8 @@ int main(int argc, char** argv) {
         camera->resetCameraImage();
 
         engine->create_matrices();
+
+        std::vector<triangle> visiable_mesh;
 
         for (auto& tri : mesh) {
 
@@ -53,14 +67,28 @@ int main(int argc, char** argv) {
 
             camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
 
+            if (is_triangle_facing_camera(tri, camera_vector_world) < 0.0f) {
+
+                cv::Vec3f light_direction(1.0f, 1.0f, -1.2f);
+                    
+                cv::Scalar base_color(255, 248, 240);
+
+                tri.ilm = color->intensity(light_direction, tri.normal);
+
+                tri.color = color->adjust_bgr_intensity(base_color, tri.ilm);
+
+                visiable_mesh.push_back(tri);
+
+            }
         }
 
         //clipping
         std::vector<triangle> clipped_mesh;
-        clipped_mesh = clipping->cubeInSpace(&mesh);
+        clipped_mesh = clipping->cubeInSpace(&visiable_mesh);
 
         camera->drawAllPoints(&clipped_mesh);
         camera->drawAllLines(&clipped_mesh);
+        camera->fillCubeFaces(&clipped_mesh);
 
         engine->update_fps();
         engine->renderFrame();

@@ -11,6 +11,8 @@ struct triangle
     cv::Mat world_points[3];
     cv::Mat normal;
     cv::Mat centroid;
+    double ilm;
+    cv::Scalar color;
 };
 
 struct mesh

@@ -7,6 +7,7 @@
 #include "CameraModel.h"
 #include "FPSCounter.h"
 #include "ClippingSpace.h"
+#include "Color.h"
 #include "Vectors.h"
 #include <exception>
 
@@ -15,17 +16,17 @@
 GraphicsEngine::GraphicsEngine() {
 
         // Initialize transformation parameters
-    cameraSystemTranslationX = 8000;
-    cameraSystemTranslationY = 10000;
-    cameraSystemTranslationZ = 11000;
+    cameraSystemTranslationX = 17223;
+    cameraSystemTranslationY = 1445;
+    cameraSystemTranslationZ = 16900;
 
-    cameraSystemRotationRoll = 2500;
+    cameraSystemRotationRoll = 2463;
     cameraSystemRotationPitch = 0;
-    cameraSystemRotationYaw = 2700;
+    cameraSystemRotationYaw = 210;
 
-    cubeSystemTranslationX = 14000;
-    cubeSystemTranslationY = 10000;
-    cubeSystemTranslationZ = 9000;
+    cubeSystemTranslationX = 12263;
+    cubeSystemTranslationY = 14403;
+    cubeSystemTranslationZ = 10000;
 
     cubeSystemRotationRoll = 0;
     cubeSystemRotationPitch = 0;
@@ -53,6 +54,12 @@ HomogenousTransformationMatrix* GraphicsEngine::init_matrices()
     cm->V_T_Cube = ht->createHomogeneousTransformationMatrix(2, 0, 1, 0, 0, 0, 0);
 
     return ht;
+}
+
+Color *GraphicsEngine::init_color()
+{
+    c = new Color();
+    return c;
 }
 
 ClippingSpace *GraphicsEngine::init_clipping()

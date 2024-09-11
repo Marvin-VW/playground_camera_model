@@ -10,6 +10,7 @@ class HomogenousTransformationMatrix;
 class FpsCounter;
 class ClippingSpace;
 class Vectors;
+class Color;
 
 class GraphicsEngine
 {
@@ -22,6 +23,7 @@ public:
     ClippingSpace* init_clipping();
     FpsCounter* update_fps();
     Vectors* init_vector();
+    Color* init_color();
 
     Shape* createCube();
     CameraModel* createCamera(  double sensorWidth,
@@ -59,6 +61,7 @@ private:
     friend class HomogenousTransformationMatrix;
     friend class FpsCounter;
     friend class Vectors;
+    friend class Color;
 private:
     std::vector<triangle> mesh;
 private:
@@ -66,6 +69,7 @@ private:
     HomogenousTransformationMatrix* ht;
     ClippingSpace * cs;
     Vectors* v;
+    Color* c;
 
 private:
     FpsCounter* fc;

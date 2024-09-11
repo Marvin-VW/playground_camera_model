@@ -105,6 +105,25 @@ void CameraModel::drawCameraImageArrow(const cv::Mat& C_point0, const cv::Mat& C
     }
 }
 
+
+void CameraModel::fillCubeFaces(const std::vector<triangle>* mesh) {
+    for (const auto& tri : *mesh) {
+        std::vector<cv::Point> I_points;
+
+        for (const auto& C_point : tri.camera_points) {
+            cv::Mat I_point = I_T_C * C_point;
+
+            int u = static_cast<int>(I_point.at<double>(0) / I_point.at<double>(2));
+            int v = static_cast<int>(I_point.at<double>(1) / I_point.at<double>(2));
+
+            I_points.emplace_back(u, v);
+        }
+
+        cv::Mat Poly_Points(I_points);
+        cv::fillPoly(cameraImage, Poly_Points, tri.color);
+    }
+}
+
 void CameraModel::world_transform(const cv::Mat* matrix, triangle* tri) {
         
     for (int i = 0; i < 3; ++i) {
@@ -127,21 +146,23 @@ void CameraModel::camera_transform(const cv::Mat* matrix, triangle* tri) {
 }
 
 cv::Vec3f CameraModel::getCameraVector(const cv::Mat& V_T_C) {
-        cv::Mat rotation_matrix = V_T_C(cv::Range(0, 3), cv::Range(0, 3));
-        cv::Vec3f forward_vector(rotation_matrix.at<float>(0, 2),
-                                 rotation_matrix.at<float>(1, 2),
-                                 rotation_matrix.at<float>(2, 2));
+    cv::Mat rotation_matrix = V_T_C(cv::Rect(0, 0, 3, 3));
 
-        cv::Vec3f camera_position(V_T_C.at<float>(0, 3),
-                                  V_T_C.at<float>(1, 3),
-                                  V_T_C.at<float>(2, 3));
+    cv::Vec3f forward_vector(-rotation_matrix.at<double>(0, 2),
+                             -rotation_matrix.at<double>(1, 2),
+                             -rotation_matrix.at<double>(2, 2));
 
-        float final_vector_x = forward_vector[0] + camera_position[0];
-        float final_vector_y = forward_vector[1] + camera_position[1];
-        float final_vector_z = forward_vector[2] + camera_position[2];
+    cv::Vec3f camera_position(V_T_C.at<double>(0, 3),
+                              V_T_C.at<double>(1, 3),
+                              V_T_C.at<double>(2, 3));
 
-        return cv::Vec3f(final_vector_x, final_vector_y, final_vector_z);
-    }
+    double final_vector_x = forward_vector[0] + camera_position[0];
+    double final_vector_y = forward_vector[1] + camera_position[1];
+    double final_vector_z = forward_vector[2] + camera_position[2];
+
+    return cv::Vec3f(final_vector_x, final_vector_y, final_vector_z);
+}
+
 
 
 void CameraModel::resetCameraImage() {
