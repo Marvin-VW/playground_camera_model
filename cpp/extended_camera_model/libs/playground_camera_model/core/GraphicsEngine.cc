@@ -15,7 +15,7 @@
 
 GraphicsEngine::GraphicsEngine() {
 
-        // Initialize transformation parameters
+    // Initialize transformation parameters
     cameraSystemTranslationX = 17223;
     cameraSystemTranslationY = 1445;
     cameraSystemTranslationZ = 16900;
@@ -35,9 +35,9 @@ GraphicsEngine::GraphicsEngine() {
     cubeSystemScale = 0;
 
     // Create GUI
-    Window::createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+    window.createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
                                        &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
-    Window::createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
+    window.createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
                                      &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale);
 
                                 
@@ -141,6 +141,9 @@ CameraModel* GraphicsEngine::createCamera(  double sensorWidth,
 }
 
 void GraphicsEngine::renderFrame() {
+
+        window.handleMovement(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
+                            &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
 
         cv::imshow("image window", cm->getCameraImage());
 
