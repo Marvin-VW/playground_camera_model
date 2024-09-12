@@ -142,6 +142,25 @@ void Window::moveCameraWithMouse(int deltaX, int deltaY) {
     cameraSystemRotationYaw += deltaX;
     cameraSystemRotationRoll -= -deltaY;
 
+    if (cameraSystemRotationYaw > 3600)
+    {
+        cameraSystemRotationYaw -= 3599;
+    }
+
+    if (cameraSystemRotationRoll > 3600)
+    {
+        cameraSystemRotationRoll -= 3599;
+    }
+
+    if (cameraSystemRotationYaw < 0)
+    {
+        cameraSystemRotationYaw += 3599;
+    }
+    
+    if (cameraSystemRotationRoll < 0)
+    {
+        cameraSystemRotationRoll += 3599;
+    }
     // Update the OpenCV trackbars with the new values
     cv::setTrackbarPos("Yaw", "camera settings", cameraSystemRotationYaw);
     cv::setTrackbarPos("Pitch", "camera settings", cameraSystemRotationPitch);
