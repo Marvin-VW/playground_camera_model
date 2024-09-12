@@ -41,24 +41,8 @@ public:
     void update_movement(int key);
 
 public:
-    int32_t cameraSystemTranslationX;
-    int32_t cameraSystemTranslationY;
-    int32_t cameraSystemTranslationZ;
-    int32_t cameraSystemRotationRoll;
-    int32_t cameraSystemRotationPitch;
-    int32_t cameraSystemRotationYaw;
 
-    int32_t cubeSystemTranslationX;
-    int32_t cubeSystemTranslationY;
-    int32_t cubeSystemTranslationZ;
-    int32_t cubeSystemRotationRoll;
-    int32_t cubeSystemRotationPitch;
-    int32_t cubeSystemRotationYaw;
-    int32_t cubeSystemScale;
-
-    int32_t cubeSystemNormals;
-    int32_t cubeSystemPoints;
-    int32_t cubeSystemFaces;
+    Window window;
 
 
 private:
@@ -76,5 +60,4 @@ private:
     Vectors* v;
     Color* c;
     FpsCounter* fc;
-    Window window;
 };

@@ -16,39 +16,33 @@
 GraphicsEngine::GraphicsEngine() {
 
     // Initialize transformation parameters
-    cameraSystemTranslationX = 10000;
-    cameraSystemTranslationY = 10000;
-    cameraSystemTranslationZ = 10000;
+    window.cameraSystemTranslationX = 7000;
+    window.cameraSystemTranslationY = 10000;
+    window.cameraSystemTranslationZ = 10000;
 
-    cameraSystemRotationRoll = 2700;
-    cameraSystemRotationPitch = 0;
-    cameraSystemRotationYaw = 2700;
+    window.cameraSystemRotationRoll = 2700;
+    window.cameraSystemRotationPitch = 0;
+    window.cameraSystemRotationYaw = 2700;
 
-    cubeSystemTranslationX = 16000;
-    cubeSystemTranslationY = 10000;
-    cubeSystemTranslationZ = 10000;
+    window.cubeSystemTranslationX = 16000;
+    window.cubeSystemTranslationY = 10000;
+    window.cubeSystemTranslationZ = 10000;
 
-    cubeSystemRotationRoll = 0;
-    cubeSystemRotationPitch = 0;
-    cubeSystemRotationYaw = 350;
+    window.cubeSystemRotationRoll = 0;
+    window.cubeSystemRotationPitch = 0;
+    window.cubeSystemRotationYaw = 350;
 
-    cubeSystemScale = 0;
+    window.cubeSystemScale = 0;
 
-    cubeSystemNormals = 0;
-    cubeSystemPoints = 0;
-    cubeSystemFaces = 1;
-
-
+    window.cubeSystemNormals = 0;
+    window.cubeSystemPoints = 0;
+    window.cubeSystemFaces = 1;
 
     // Create GUI
-    window.createCameraSettingsWindow(&cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
-                                       &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
+    window.createCameraSettingsWindow();
 
-    window.createCubeSettingsWindow(&cubeSystemTranslationX, &cubeSystemTranslationY, &cubeSystemTranslationZ,
-                                     &cubeSystemRotationRoll, &cubeSystemRotationPitch, &cubeSystemRotationYaw, &cubeSystemScale, 
-                                     &cubeSystemNormals, &cubeSystemPoints, &cubeSystemFaces);
-
-                                
+    window.createCubeSettingsWindow();
+   
     fc = new FpsCounter(60);
 
 }
@@ -88,12 +82,12 @@ CameraModel* GraphicsEngine::create_matrices()
 
     // Create camera to world matrix
     cm->V_T_C = ht->createHomogeneousTransformationMatrix(
-        (cameraSystemTranslationX - 10000) / 1000.0,
-        (cameraSystemTranslationY - 10000) / 1000.0,
-        (cameraSystemTranslationZ - 10000) / 1000.0,
-        DEG_TO_RAD(cameraSystemRotationRoll / 10.0),
-        DEG_TO_RAD(cameraSystemRotationPitch / 10.0),
-        DEG_TO_RAD(cameraSystemRotationYaw / 10.0),
+        (window.cameraSystemTranslationX - 10000) / 1000.0,
+        (window.cameraSystemTranslationY - 10000) / 1000.0,
+        (window.cameraSystemTranslationZ - 10000) / 1000.0,
+        DEG_TO_RAD(window.cameraSystemRotationRoll / 10.0),
+        DEG_TO_RAD(window.cameraSystemRotationPitch / 10.0),
+        DEG_TO_RAD(window.cameraSystemRotationYaw / 10.0),
         1.0f);
 
     // Compute inverse (world to camera matrix)
@@ -101,13 +95,13 @@ CameraModel* GraphicsEngine::create_matrices()
 
     // Create cube to world matrix
     cm->V_T_Cube = ht->createHomogeneousTransformationMatrix(
-        (cubeSystemTranslationX - 10000) / 1000.0,
-        (cubeSystemTranslationY - 10000) / 1000.0,
-        (cubeSystemTranslationZ - 10000) / 1000.0,
-        DEG_TO_RAD(cubeSystemRotationRoll / 10.0),
-        DEG_TO_RAD(cubeSystemRotationPitch / 10.0),
-        DEG_TO_RAD(cubeSystemRotationYaw / 10.0),
-        cubeSystemScale);
+        (window.cubeSystemTranslationX - 10000) / 1000.0,
+        (window.cubeSystemTranslationY - 10000) / 1000.0,
+        (window.cubeSystemTranslationZ - 10000) / 1000.0,
+        DEG_TO_RAD(window.cubeSystemRotationRoll / 10.0),
+        DEG_TO_RAD(window.cubeSystemRotationPitch / 10.0),
+        DEG_TO_RAD(window.cubeSystemRotationYaw / 10.0),
+        window.cubeSystemScale);
 
     return cm;
 
@@ -134,13 +128,16 @@ CameraModel* GraphicsEngine::createCamera(  double sensorWidth,
 
     cm = new CameraModel(sensorWidth, sensorHeight, focalLength, resolutionX, resolutionY, u0, v0);
 
+    renderFrame();
+    window.mouseMoveCamera();
+
     return cm;
 
 }
 
 void GraphicsEngine::update_movement(int key) {
-    window.handleMovement(key, &cameraSystemTranslationX, &cameraSystemTranslationY, &cameraSystemTranslationZ,
-                            &cameraSystemRotationRoll, &cameraSystemRotationPitch, &cameraSystemRotationYaw);
+    window.handleMovement(key);
+
 }
 
 

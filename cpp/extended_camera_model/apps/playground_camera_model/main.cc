@@ -6,6 +6,7 @@
 #include "ClippingSpace.h"
 #include "Vectors.h"
 #include "Color.h"
+#include "Window.h"
 #include <cmath>
 
 #include <iostream>
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
             if (is_triangle_facing_camera(tri, camera_vector_world) < 0.0f) {
 
 
-                if (engine->cubeSystemNormals == 1)
+                if (engine->window.cubeSystemNormals == 1)
                     camera->drawCameraImageArrow(normal_start_camera, normal_end_camera);
 
                 cv::Vec3f light_direction(1.0f, -0.5f, -0.8f);
@@ -81,12 +82,12 @@ int main(int argc, char** argv) {
         std::vector<triangle> clipped_mesh;
         clipped_mesh = clipping->cubeInSpace(&visiable_mesh);
 
-        if (engine->cubeSystemPoints == 1)
+        if (engine->window.cubeSystemPoints == 1)
         {
             camera->drawAllPoints(&clipped_mesh);
         }
 
-        if (engine->cubeSystemFaces == 1)
+        if (engine->window.cubeSystemFaces == 1)
         {
                 camera->fillCubeFaces(&clipped_mesh);
         }
@@ -97,9 +98,6 @@ int main(int argc, char** argv) {
 
         int key = cv::waitKey(10) & 0xFF;
 
-        std::cout << key << std::endl;
-
-        
         engine->update_movement(key);
 
         if (key == 27) {
