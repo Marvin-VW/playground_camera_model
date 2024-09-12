@@ -6,7 +6,6 @@
 int prevMouseX = -1;
 int prevMouseY = -1;
 bool pressed = false;
-bool rightmode = false;
 
 void Window::createCameraSettingsWindow()
 {
@@ -109,21 +108,8 @@ void mouseCallback(int event, int x, int y, int flags, void* userdata) {
     {
         pressed = false;
     }
-
-    else if (event == cv::EVENT_RBUTTONDOWN)
-    {
-        rightmode = true;
-    }
-
-    else if (event == cv::EVENT_RBUTTONDBLCLK)
-    {
-        rightmode = false;
-        prevMouseX = x;
-        prevMouseY = y;
-    }
     
-    else if (event == cv::EVENT_MOUSEMOVE) {
-        if (pressed == true || rightmode == true){
+    else if (event == cv::EVENT_MOUSEMOVE && pressed == true) {
         Window* window = static_cast<Window*>(userdata);
 
         if (prevMouseX == -1 || prevMouseY == -1) {
@@ -139,7 +125,6 @@ void mouseCallback(int event, int x, int y, int flags, void* userdata) {
         prevMouseY = y;
 
         window->moveCameraWithMouse(deltaX, deltaY);
-        }
     }
     
 }
