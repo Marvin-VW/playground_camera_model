@@ -67,6 +67,7 @@ Color *RenderSystem::init_color()
 ClippingSpace *RenderSystem::init_clipping()
 {
     cs = new ClippingSpace();
+    std::cout << &cs << std::endl;
     return cs;
 }
 

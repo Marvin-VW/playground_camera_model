@@ -18,18 +18,18 @@ float Engine::is_triangle_facing_camera(triangle& tri, cv::Vec3f cam) {
 Engine::Engine()
 {
     // Initialize the graphics renderer
-    RenderSystem* renderer = new RenderSystem();
+    renderer = new RenderSystem();
 
     //instances of shape, camera and matrix
-    Shape* shape = renderer->createCube();
-    CameraModel* camera = renderer->createCamera(0.00452, 0.00254, 0.004, 1280, 720, 1280 / 2, 720 / 2);
-    HomogenousTransformationMatrix* matrix = renderer->init_matrices();
-    ClippingSpace* clipping = renderer->init_clipping();
-    Vectors* vec = renderer->init_vector();
-    Color* color = renderer->init_color();
+    shape = renderer->createCube();
+    camera = renderer->createCamera(0.00452, 0.00254, 0.004, 1280, 720, 1280 / 2, 720 / 2);
+    matrix = renderer->init_matrices();
+    clipping = renderer->init_clipping();
+    vec = renderer->init_vector();
+    color = renderer->init_color();
 
     //generate cube mesh
-    std::vector<triangle> mesh = shape->generate_mesh();
+    mesh = shape->generate_mesh();
 
 }
 
