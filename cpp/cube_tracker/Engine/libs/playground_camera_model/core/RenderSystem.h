@@ -46,6 +46,7 @@ public:
 public:
 
     Window window;
+    CameraModel* cm;
 
 
 private:
@@ -57,7 +58,6 @@ private:
 private:
     std::vector<triangle> mesh;
 private:
-    CameraModel* cm;
     HomogenousTransformationMatrix* ht;
     ClippingSpace * cs;
     Vectors* v;

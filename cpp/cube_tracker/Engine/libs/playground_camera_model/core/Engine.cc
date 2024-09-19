@@ -34,12 +34,13 @@ Engine::Engine(int frame_width, int frame_height)
 }
 
 
-void Engine::run(int key, cv::Mat frame)
+void Engine::run(int key, cv::Mat frame, std::vector<triangle> mesh_new)
 {
+    this->mesh = mesh_new;
 
     cv::Vec3f camera_vector_world = camera->getCameraVector(camera->V_T_C);
 
-    camera->resetCameraImage(frame);
+    //camera->resetCameraImage(frame);
 
     renderer->create_matrices();
 
@@ -47,7 +48,7 @@ void Engine::run(int key, cv::Mat frame)
 
     for (auto& tri : mesh) {
 
-        camera->world_transform(&camera->V_T_Cube, &tri);
+        //camera->world_transform(&camera->V_T_Cube, &tri);
         camera->camera_transform(&camera->C_T_V, &tri);
 
         std::tuple<cv::Mat, cv::Mat> result = vec->normal(tri, 0.5f);
@@ -56,6 +57,10 @@ void Engine::run(int key, cv::Mat frame)
         cv::Mat normal_end = std::get<1>(result);
         cv::Mat normal_start_camera = camera->C_T_V * normal_start;
         cv::Mat normal_end_camera = camera->C_T_V * normal_end;
+
+        visiable_mesh.push_back(tri);
+
+        /*
 
         //backface culling
         if (is_triangle_facing_camera(tri, camera_vector_world) < 0.0f) {
@@ -73,11 +78,14 @@ void Engine::run(int key, cv::Mat frame)
             visiable_mesh.push_back(tri);
 
         }
+        */
     }
 
     //clipping
     std::vector<triangle> clipped_mesh;
     clipped_mesh = clipping->cubeInSpace(&visiable_mesh);
+
+    
 
     if (renderer->window.cubeSystemPoints == 1)
     {
@@ -89,6 +97,8 @@ void Engine::run(int key, cv::Mat frame)
             camera->fillCubeFaces(&clipped_mesh);
     }
     camera->drawAllLines(&clipped_mesh);
+    
+    
 
     renderer->update_fps();
     renderer->renderFrame();

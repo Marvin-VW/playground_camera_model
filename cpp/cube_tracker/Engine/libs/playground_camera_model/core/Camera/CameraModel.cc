@@ -54,6 +54,8 @@ void CameraModel::drawCameraImagePoint(const cv::Mat& C_point){
 
 	const cv::Point point(u,v);
 
+    std::cout << "Pint" << point << std::endl;
+
 	cv::circle(cameraImage, point, 5, cv::Scalar(255,0,0), 2);
 
 }
@@ -138,10 +140,10 @@ void CameraModel::world_transform(const cv::Mat* matrix, triangle* tri) {
 
 void CameraModel::camera_transform(const cv::Mat* matrix, triangle* tri) {
     for (int i = 0; i < 3; ++i) {
-        cv::Mat point = tri->world_points[i];
-        cv::Mat transformed_point = (*matrix) * point;
+        cv::Mat point = tri->camera_points[i];
+        cv::Mat transformed_point = (*matrix).inv() * point;
 
-        tri->camera_points[i] = transformed_point;
+        tri->world_points[i] = transformed_point;
     }
 }
 

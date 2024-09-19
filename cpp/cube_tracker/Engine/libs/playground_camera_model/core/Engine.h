@@ -20,12 +20,12 @@ public:
     ~Engine();
 
 
-    void run(int key, cv::Mat frame);
+    void run(int key, cv::Mat frame, std::vector<triangle>);
     RenderSystem* renderer;
+    CameraModel* camera;
 
 private:
     Shape* shape;
-    CameraModel* camera;
     HomogenousTransformationMatrix* matrix;
     ClippingSpace* clipping;
     Vectors* vec;
