@@ -16,19 +16,19 @@ cv::Mat Shape::createPoint(double x, double y, double z){
 }
 
 
-std::vector<triangle> Shape::generate_mesh() {
+std::vector<triangle> Shape::generate_mesh(double x, double y, double z) {
 
     std::vector<triangle> mesh;
 
     // Init points of cube
-    cv::Mat Cube_cubeP0 = createPoint(-1,  1, -1);
-    cv::Mat Cube_cubeP1 = createPoint(-1, -1, -1);
-    cv::Mat Cube_cubeP2 = createPoint( 1, -1, -1);
-    cv::Mat Cube_cubeP3 = createPoint( 1,  1, -1);
-    cv::Mat Cube_cubeP4 = createPoint(-1,  1,  1);
-    cv::Mat Cube_cubeP5 = createPoint(-1, -1,  1);
-    cv::Mat Cube_cubeP6 = createPoint( 1, -1,  1);
-    cv::Mat Cube_cubeP7 = createPoint( 1,  1,  1);
+    cv::Mat Cube_cubeP0 = createPoint(-x,  y, -z);
+    cv::Mat Cube_cubeP1 = createPoint(-x, -y, -z);
+    cv::Mat Cube_cubeP2 = createPoint( x, -y, -z);
+    cv::Mat Cube_cubeP3 = createPoint( x,  y, -z);
+    cv::Mat Cube_cubeP4 = createPoint(-x,  y,  z);
+    cv::Mat Cube_cubeP5 = createPoint(-x, -y,  z);
+    cv::Mat Cube_cubeP6 = createPoint( x, -y,  z);
+    cv::Mat Cube_cubeP7 = createPoint( x,  y,  z);
 
     mesh = {
         // Top face
@@ -60,7 +60,7 @@ std::vector<triangle> Shape::generate_mesh() {
 }
 
 
-void Shape::set_position(float x, float y, float z, std::vector<triangle>* mesh) {
+void Shape::set_position(double x, double y, double z, triangle* tri) {
 
     double temp_matrix[4*4] = {
         1, 0, 0, x,
@@ -71,15 +71,15 @@ void Shape::set_position(float x, float y, float z, std::vector<triangle>* mesh)
 
     cv::Mat translation_matrix(4, 4, CV_64F, temp_matrix);
 
-    for (auto& tri : *mesh) {
 
-        for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) {
 
-            cv::Mat point = tri.point[i];
-            cv::Mat transformed_point = (translation_matrix) * point;
+        cv::Mat point = tri->point[i];
+        cv::Mat transformed_point = (translation_matrix) * point;
 
-            tri.point[i] = transformed_point;
-        }
+        tri->point[i] = transformed_point;
+
+        std::cout << tri->point[i] << std::endl;
     }
-
+    
 }

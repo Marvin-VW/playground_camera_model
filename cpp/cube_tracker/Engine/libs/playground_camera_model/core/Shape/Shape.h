@@ -25,7 +25,7 @@ class Shape {
 public:
 
 	cv::Mat createPoint(double x, double y, double z);
-    std::vector<triangle> generate_mesh();
-    void set_position(float x, float y, float z, std::vector<triangle>* mesh);
+    std::vector<triangle> generate_mesh(double x, double y, double z);
+    void set_position(double x, double y, double z, triangle* mesh);
 
 };

@@ -16,7 +16,7 @@
 RenderSystem::RenderSystem() {
 
     // Initialize transformation parameters
-    window.cameraSystemTranslationX = 7000;
+    window.cameraSystemTranslationX = 10000;
     window.cameraSystemTranslationY = 10000;
     window.cameraSystemTranslationZ = 10000;
 
@@ -24,19 +24,19 @@ RenderSystem::RenderSystem() {
     window.cameraSystemRotationPitch = 0;
     window.cameraSystemRotationYaw = 2700;
 
-    window.cubeSystemTranslationX = 16000;
+    window.cubeSystemTranslationX = 20000;
     window.cubeSystemTranslationY = 10000;
     window.cubeSystemTranslationZ = 10000;
 
     window.cubeSystemRotationRoll = 0;
     window.cubeSystemRotationPitch = 0;
-    window.cubeSystemRotationYaw = 350;
+    window.cubeSystemRotationYaw = 0;
 
     window.cubeSystemScale = 0;
 
     window.cubeSystemNormals = 0;
     window.cubeSystemPoints = 0;
-    window.cubeSystemFaces = 1;
+    window.cubeSystemFaces = 0;
 
     // Create GUI
     window.createCameraSettingsWindow();
@@ -110,9 +110,6 @@ CameraModel* RenderSystem::create_matrices()
 Shape* RenderSystem::createCube() {
 
     Shape* sp = new Shape();
-
-    mesh = sp->generate_mesh();
-
     return sp;
 
 }
@@ -129,7 +126,7 @@ CameraModel* RenderSystem::createCamera(  double sensorWidth,
     cm = new CameraModel(sensorWidth, sensorHeight, focalLength, resolutionX, resolutionY, u0, v0);
 
     renderFrame();
-    window.mouseMoveCamera();
+    //window.mouseMoveCamera();
 
     return cm;
 

@@ -43,6 +43,6 @@ public:
     void camera_transform(const cv::Mat* matrix, triangle* tri);
     cv::Vec3f getCameraVector(const cv::Mat& V_T_C);
 
-    void resetCameraImage();
+    void resetCameraImage(cv::Mat frame);
     cv::Mat& getCameraImage();
 };

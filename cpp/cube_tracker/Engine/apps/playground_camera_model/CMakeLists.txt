@@ -6,7 +6,7 @@ set(TARGET_NAME playground_camera_model)
 # add source files to target
 #
 add_executable(${TARGET_NAME}
-    main.cc
+    main_image.cc
 )
 
 

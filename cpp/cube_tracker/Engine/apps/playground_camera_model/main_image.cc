@@ -1,27 +1,26 @@
 #include "Engine.h"
 #include <opencv2/opencv.hpp>
+#include <unistd.h>
 
 
 
 int main() {
 
-    
-
-    cv::Scalar lower_pink(130, 0, 130);
-    cv::Scalar upper_pink(255, 255, 255);
-
-    std::string video_path = "http://192.168.30.142:8443/normal.py";
-    cv::VideoCapture cap(video_path);
-
-    cv::Mat frame, hls_frame, mask;
-
-    if (!cap.isOpened()) {
-        std::cerr << "Error: Could not open video file!" << std::endl;
-        return -1;
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+        std::cout << "Current working directory: " << cwd << std::endl;
+    } else {
+        perror("getcwd() error");
     }
 
-    int frame_width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
-    int frame_height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+
+    cv::Scalar lower_pink(130, 130, 130);
+    cv::Scalar upper_pink(255, 255, 255);
+
+    cv::Mat hls_frame, mask;
+
+    int frame_width = 640;
+    int frame_height = 480;
     
 
     Engine* engine = new Engine(frame_width, frame_height);
@@ -32,21 +31,12 @@ int main() {
     while (running) {
 
 
+        cv::Mat frame = cv::imread("/Users/vw67pfr/Desktop/playground_camera_model/cpp/cube_tracker/Engine/apps/playground_camera_model/1.jpg");
 
         double relativ_x;
         double relativ_y;
 
-        bool ret = cap.read(frame);
-
-        if (!ret) {
-            break;
-        }
-
-        cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
-
-        cv::cvtColor(frame, hls_frame, cv::COLOR_BGR2HLS);
-
-        //cv::flip(frame, frame, 1);
+        cv::cvtColor(frame, hls_frame, cv::COLOR_RGB2HLS);
 
         cv::inRange(hls_frame, lower_pink, upper_pink, mask);
 
@@ -69,7 +59,7 @@ int main() {
             relativ_x = static_cast<double>(center_x) / frame_width;
             relativ_y = static_cast<double>(center_y) / frame_height;
                         
-            std::cout << "Frame width: " << static_cast<double>(frame_width)/frame_height << ", Frame height: " << frame_height << std::endl;
+            //std::cout << "Frame width: " << static_cast<double>(frame_width)/frame_height << ", Frame height: " << frame_height << std::endl;
 
             cv::circle(frame, cv::Point(center_x, center_y), 5, cv::Scalar(255, 0, 0), -1);
 
@@ -85,7 +75,7 @@ int main() {
         engine->renderer->window.cubeSystemTranslationZ = (10000 - (engine_y*(6000)*(static_cast<double>(frame_width)/frame_height)));
 
 
-        int key = cv::waitKey(10);
+        int key = cv::waitKey(0);
 
 
         engine->run(key, frame);
@@ -96,8 +86,6 @@ int main() {
         }
     }
 
-
-    cap.release();
     cv::destroyAllWindows();
 
 

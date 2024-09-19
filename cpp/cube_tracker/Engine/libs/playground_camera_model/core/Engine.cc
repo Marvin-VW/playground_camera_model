@@ -15,41 +15,31 @@ float Engine::is_triangle_facing_camera(triangle& tri, cv::Vec3f cam) {
 };
 
 
-Engine::Engine()
+Engine::Engine(int frame_width, int frame_height)
 {
     // Initialize the graphics renderer
     renderer = new RenderSystem();
 
     //instances of shape, camera and matrix
     shape = renderer->createCube();
-    camera = renderer->createCamera(0.00452, 0.00254, 0.004, 1280, 720, 1280 / 2, 720 / 2);
+    camera = renderer->createCamera(0.00452, 0.00339, 0.004, frame_width, frame_height, frame_width / 2, frame_height / 2);
     matrix = renderer->init_matrices();
     clipping = renderer->init_clipping();
     vec = renderer->init_vector();
     color = renderer->init_color();
 
     //generate cube mesh
-    mesh = shape->generate_mesh();
+    mesh = shape->generate_mesh(1,1,1);
 
 }
 
 
-void Engine::setPosition(float x, float y, float z)
-{
-    shape->set_position(x,y,z,&mesh);
-}
-
-//void setScale(float scaleX, float scaleY, float scaleZ);
-
-//void setRotation(float rotX, float rotY, float rotZ);
-
-
-void Engine::run(int key)
+void Engine::run(int key, cv::Mat frame)
 {
 
     cv::Vec3f camera_vector_world = camera->getCameraVector(camera->V_T_C);
 
-    camera->resetCameraImage();
+    camera->resetCameraImage(frame);
 
     renderer->create_matrices();
 

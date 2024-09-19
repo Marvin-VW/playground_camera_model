@@ -16,17 +16,14 @@
 
 class Engine {
 public:
-    Engine();
+    Engine(int frame_width, int frame_height);
     ~Engine();
 
-    void setPosition(float x, float y, float z);
-    //void setScale(float scaleX, float scaleY, float scaleZ);
-    //void setRotation(float rotX, float rotY, float rotZ);
 
-    void run(int key);
+    void run(int key, cv::Mat frame);
+    RenderSystem* renderer;
 
 private:
-    RenderSystem* renderer;
     Shape* shape;
     CameraModel* camera;
     HomogenousTransformationMatrix* matrix;
